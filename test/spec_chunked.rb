@@ -23,7 +23,7 @@ describe Rack::Chunked do
     app = lambda { |env| [200, {"content-type" => "text/plain"}, ['Hello', ' ', 'World!']] }
     response = Rack::MockResponse.new(*chunked(app).call(@env))
     response.headers.wont_include 'content-length'
-    response.headers['Transfer-Encoding'].must_equal 'chunked'
+    response.headers['transfer-encoding'].must_equal 'chunked'
     response.body.must_equal "5\r\nHello\r\n1\r\n \r\n6\r\nWorld!\r\n0\r\n\r\n"
   end
 
@@ -31,7 +31,7 @@ describe Rack::Chunked do
     app = lambda { |env| [200, {"content-type" => "text/plain"}, []] }
     response = Rack::MockResponse.new(*chunked(app).call(@env))
     response.headers.wont_include 'content-length'
-    response.headers['Transfer-Encoding'].must_equal 'chunked'
+    response.headers['transfer-encoding'].must_equal 'chunked'
     response.body.must_equal "0\r\n\r\n"
   end
 
@@ -40,7 +40,7 @@ describe Rack::Chunked do
     app  = lambda { |env| [200, {"content-type" => "text/plain"}, body] }
     response = Rack::MockResponse.new(*chunked(app).call(@env))
     response.headers.wont_include 'content-length'
-    response.headers['Transfer-Encoding'].must_equal 'chunked'
+    response.headers['transfer-encoding'].must_equal 'chunked'
     response.body.encoding.to_s.must_equal "ASCII-8BIT"
     response.body.must_equal "c\r\n\xFE\xFFH\x00e\x00l\x00l\x00o\x00\r\n2\r\n \x00\r\na\r\nW\x00o\x00r\x00l\x00d\x00\r\n0\r\n\r\n".force_encoding("BINARY")
     response.body.must_equal "c\r\n\xFE\xFFH\x00e\x00l\x00l\x00o\x00\r\n2\r\n \x00\r\na\r\nW\x00o\x00r\x00l\x00d\x00\r\n0\r\n\r\n".force_encoding(Encoding::BINARY)
@@ -52,7 +52,7 @@ describe Rack::Chunked do
     }
     status, headers, body = chunked(app).call(@env)
     status.must_equal 200
-    headers.wont_include 'Transfer-Encoding'
+    headers.wont_include 'transfer-encoding'
     headers.must_include 'content-length'
     body.join.must_equal 'Hello World!'
   end
@@ -62,7 +62,7 @@ describe Rack::Chunked do
     @env['HTTP_VERSION'] = 'HTTP/1.0'
     status, headers, body = chunked(app).call(@env)
     status.must_equal 200
-    headers.wont_include 'Transfer-Encoding'
+    headers.wont_include 'transfer-encoding'
     body.join.must_equal 'Hello World!'
   end
 
@@ -71,7 +71,7 @@ describe Rack::Chunked do
     check = lambda do
       status, headers, body = chunked(app).call(@env.dup)
       status.must_equal 200
-      headers.wont_include 'Transfer-Encoding'
+      headers.wont_include 'transfer-encoding'
       body.join.must_equal 'Hello World!'
     end
 
@@ -84,11 +84,11 @@ describe Rack::Chunked do
 
   it 'not modify response when Transfer-Encoding header already present' do
     app = lambda { |env|
-      [200, {"content-type" => "text/plain", 'Transfer-Encoding' => 'identity'}, ['Hello', ' ', 'World!']]
+      [200, {"content-type" => "text/plain", 'transfer-encoding' => 'identity'}, ['Hello', ' ', 'World!']]
     }
     status, headers, body = chunked(app).call(@env)
     status.must_equal 200
-    headers['Transfer-Encoding'].must_equal 'identity'
+    headers['transfer-encoding'].must_equal 'identity'
     body.join.must_equal 'Hello World!'
   end
 
@@ -97,7 +97,7 @@ describe Rack::Chunked do
       app = lambda { |env| [status_code, {}, []] }
       status, headers, _ = chunked(app).call(@env)
       status.must_equal status_code
-      headers.wont_include 'Transfer-Encoding'
+      headers.wont_include 'transfer-encoding'
     end
   end
 end

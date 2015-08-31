@@ -174,14 +174,14 @@ describe Rack::Handler::WEBrick do
     Rack::Lint.new(lambda{ |req|
       [
         200,
-        {"Transfer-Encoding" => "chunked"},
+        {"transfer-encoding" => "chunked"},
         ["7\r\nchunked\r\n0\r\n\r\n"]
       ]
     })
 
     Net::HTTP.start(@host, @port){ |http|
       res = http.get("/chunked")
-      res["Transfer-Encoding"].must_equal "chunked"
+      res["transfer-encoding"].must_equal "chunked"
       res["content-length"].must_equal nil
       res.body.must_equal "chunked"
     }

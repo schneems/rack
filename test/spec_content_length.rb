@@ -40,7 +40,7 @@ describe Rack::ContentLength do
   end
 
   it "not set Content-Length when Transfer-Encoding is chunked" do
-    app = lambda { |env| [200, {'content-type' => 'text/plain', 'Transfer-Encoding' => 'chunked'}, []] }
+    app = lambda { |env| [200, {'content-type' => 'text/plain', 'transfer-encoding' => 'chunked'}, []] }
     response = content_length(app).call(request)
     response[1]['content-length'].must_equal nil
   end
