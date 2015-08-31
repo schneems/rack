@@ -29,28 +29,28 @@ describe Rack::Lint do
       e.delete("request_method")
       Rack::Lint.new(nil).call(e)
     }.must_raise(Rack::Lint::LintError).
-      message.must_match(/missing required key REQUEST_METHOD/)
+      message.must_match(/missing required key request_method/)
 
     lambda {
       e = env
       e.delete("server_name")
       Rack::Lint.new(nil).call(e)
     }.must_raise(Rack::Lint::LintError).
-      message.must_match(/missing required key SERVER_NAME/)
+      message.must_match(/missing required key server_name/)
 
 
     lambda {
-      Rack::Lint.new(nil).call(env("HTTP_CONTENT_TYPE" => "text/plain"))
+      Rack::Lint.new(nil).call(env("http_content_type" => "text/plain"))
     }.must_raise(Rack::Lint::LintError).
-      message.must_match(/contains HTTP_CONTENT_TYPE/)
+      message.must_match(/contains http_content_type/)
 
     lambda {
-      Rack::Lint.new(nil).call(env("HTTP_CONTENT_LENGTH" => "42"))
+      Rack::Lint.new(nil).call(env("http_content_type" => "42"))
     }.must_raise(Rack::Lint::LintError).
-      message.must_match(/contains HTTP_CONTENT_LENGTH/)
+      message.must_match(/contains http_content_type/)
 
     lambda {
-      Rack::Lint.new(nil).call(env("FOO" => Object.new))
+      Rack::Lint.new(nil).call(env("foo" => Object.new))
     }.must_raise(Rack::Lint::LintError).
       message.must_match(/non-string value/)
 
@@ -109,7 +109,7 @@ describe Rack::Lint do
     lambda {
       Rack::Lint.new(nil).call(env("content-length" => "xcii"))
     }.must_raise(Rack::Lint::LintError).
-      message.must_match(/Invalid CONTENT_LENGTH/)
+      message.must_match(/Invalid content-length/)
 
     lambda {
       e = env
@@ -257,7 +257,7 @@ describe Rack::Lint do
 
     # non-Hash header responses.must_be :allowed?
     Rack::Lint.new(lambda { |env|
-                     [200, [%w(Content-Type text/plain), %w(Content-Length 0)], []]
+                     [200, [%w(content-type text/plain), %w(content-length 0)], []]
                    }).call(env({})).first.must_equal 200
   end
 
@@ -275,7 +275,7 @@ describe Rack::Lint do
                          [status, {"content-type" => "text/plain", "content-length" => "0"}, []]
                        }).call(env({}))
       }.must_raise(Rack::Lint::LintError).
-        message.must_match(/Content-Type header found/)
+        message.must_match(/content-type header found/)
     end
   end
 
@@ -286,7 +286,7 @@ describe Rack::Lint do
                          [status, {"content-length" => "0"}, []]
                        }).call(env({}))
       }.must_raise(Rack::Lint::LintError).
-        message.must_match(/Content-Length header found/)
+        message.must_match(/content-length header found/)
     end
 
     lambda {
@@ -294,7 +294,7 @@ describe Rack::Lint do
                        [200, {"content-type" => "text/plain", "content-length" => "1"}, []]
                      }).call(env({}))[2].each { }
     }.must_raise(Rack::Lint::LintError).
-      message.must_match(/Content-Length header was 1, but should be 0/)
+      message.must_match(/content-Length header was 1, but should be 0/)
   end
 
   it "notice body errors" do

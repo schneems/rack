@@ -398,6 +398,7 @@ module Rack
 
     module HeaderHash
       def self.new(hash = {})
+        hash = hash.to_h
         hash.default_proc ||= proc do |hash, key|
           downcased_key = key.downcase
           if value = hash.key?(downcased_key)

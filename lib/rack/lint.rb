@@ -312,18 +312,18 @@ module Rack
         env[PATH_INFO] =~ /\A\//
       }
       ## * The <tt>CONTENT_LENGTH</tt>, if given, must consist of digits only.
-      assert("Invalid CONTENT_LENGTH: #{env["content-length"]}") {
+      assert("Invalid content-length: #{env["content-length"]}") {
         !env.include?("content-length") || env["content-length"] =~ /\A\d+\z/
       }
 
       ## * One of <tt>SCRIPT_NAME</tt> or <tt>PATH_INFO</tt> must be
       ##   set.  <tt>PATH_INFO</tt> should be <tt>/</tt> if
       ##   <tt>SCRIPT_NAME</tt> is empty.
-      assert("One of SCRIPT_NAME or PATH_INFO must be set (make PATH_INFO '/' if SCRIPT_NAME is empty)") {
+      assert("One of script_name or path_info must be set (make path_info '/' if script_name is empty)") {
         env[SCRIPT_NAME] || env[PATH_INFO]
       }
       ##   <tt>SCRIPT_NAME</tt> never should be <tt>/</tt>, but instead be empty.
-      assert("SCRIPT_NAME cannot be '/', make it '' and PATH_INFO '/'") {
+      assert("script_name cannot be '/', make it '' and PATH_INFO '/'") {
         env[SCRIPT_NAME] != "/"
       }
     end
@@ -661,7 +661,7 @@ module Rack
         ## There must not be a <tt>Content-Type</tt>, when the +Status+ is 1xx,
         ## 204, 205 or 304.
         if key == "content-type"
-          assert("Content-Type header found in #{status} response, not allowed") {
+          assert("content-type header found in #{status} response, not allowed") {
             not Rack::Utils::STATUS_WITH_NO_ENTITY_BODY.include? status.to_i
           }
           return
@@ -675,7 +675,7 @@ module Rack
         if key == 'content-length'
           ## There must not be a <tt>Content-Length</tt> header when the
           ## +Status+ is 1xx, 204, 205 or 304.
-          assert("Content-Length header found in #{status} response, not allowed") {
+          assert("content-length header found in #{status} response, not allowed") {
             not Rack::Utils::STATUS_WITH_NO_ENTITY_BODY.include? status.to_i
           }
           @content_length = value
