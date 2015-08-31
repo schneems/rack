@@ -61,8 +61,8 @@ module Rack
         env[QUERY_STRING] ||= ""
         env[HTTP_VERSION] ||= env[SERVER_PROTOCOL]
         env[REQUEST_PATH] ||= "/"
-        env.delete "CONTENT_TYPE"  if env["CONTENT_TYPE"] == ""
-        env.delete "CONTENT_LENGTH"  if env["CONTENT_LENGTH"] == ""
+        env.delete "content-type"  if env["content-type"] == ""
+        env.delete "content-length"  if env["content-length"] == ""
 
         begin
           status, headers, body = app.call(env)

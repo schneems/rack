@@ -6,7 +6,7 @@ class TestRequest
   NOSERIALIZE = [Method, Proc, Rack::Lint::InputWrapper]
 
   def call(env)
-    status = env["QUERY_STRING"] =~ /secret/ ? 403 : 200
+    status = env["query_string"] =~ /secret/ ? 403 : 200
     env["test.postdata"] = env["rack.input"].read
     minienv = env.dup
     # This may in the future want to replace with a dummy value instead.

@@ -44,36 +44,36 @@ describe Rack::Handler::WEBrick do
 
   it "have CGI headers on GET" do
     GET("/test")
-    response["REQUEST_METHOD"].must_equal "GET"
+    response["request_method"].must_equal "GET"
     response["script_name"].must_equal "/test"
     response["REQUEST_PATH"].must_equal "/test"
     response["path_info"].must_equal ""
-    response["QUERY_STRING"].must_equal ""
+    response["query_string"].must_equal ""
     response["test.postdata"].must_equal ""
 
     GET("/test/foo?quux=1")
-    response["REQUEST_METHOD"].must_equal "GET"
+    response["request_method"].must_equal "GET"
     response["script_name"].must_equal "/test"
     response["REQUEST_PATH"].must_equal "/test/foo"
     response["path_info"].must_equal "/foo"
-    response["QUERY_STRING"].must_equal "quux=1"
+    response["query_string"].must_equal "quux=1"
 
     GET("/test/foo%25encoding?quux=1")
-    response["REQUEST_METHOD"].must_equal "GET"
+    response["request_method"].must_equal "GET"
     response["script_name"].must_equal "/test"
     response["REQUEST_PATH"].must_equal "/test/foo%25encoding"
     response["path_info"].must_equal "/foo%25encoding"
-    response["QUERY_STRING"].must_equal "quux=1"
+    response["query_string"].must_equal "quux=1"
   end
 
   it "have CGI headers on POST" do
     POST("/test", {"rack-form-data" => "23"}, {'X-test-header' => '42'})
     status.must_equal 200
-    response["REQUEST_METHOD"].must_equal "POST"
+    response["request_method"].must_equal "POST"
     response["script_name"].must_equal "/test"
     response["REQUEST_PATH"].must_equal "/test"
     response["path_info"].must_equal ""
-    response["QUERY_STRING"].must_equal ""
+    response["query_string"].must_equal ""
     response["HTTP_X_TEST_HEADER"].must_equal "42"
     response["test.postdata"].must_equal "rack-form-data=23"
   end

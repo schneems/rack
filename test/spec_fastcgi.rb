@@ -59,28 +59,28 @@ describe Rack::Handler::FastCGI do
 
   it "have CGI headers on GET" do
     GET("/test.fcgi")
-    response["REQUEST_METHOD"].must_equal "GET"
+    response["request_method"].must_equal "GET"
     response["script_name"].must_equal "/test.fcgi"
     response["REQUEST_PATH"].must_equal "/"
     response["path_info"].must_equal ""
-    response["QUERY_STRING"].must_equal ""
+    response["query_string"].must_equal ""
     response["test.postdata"].must_equal ""
 
     GET("/test.fcgi/foo?quux=1")
-    response["REQUEST_METHOD"].must_equal "GET"
+    response["request_method"].must_equal "GET"
     response["script_name"].must_equal "/test.fcgi"
     response["REQUEST_PATH"].must_equal "/"
     response["path_info"].must_equal "/foo"
-    response["QUERY_STRING"].must_equal "quux=1"
+    response["query_string"].must_equal "quux=1"
   end
 
   it "have CGI headers on POST" do
     POST("/test.fcgi", {"rack-form-data" => "23"}, {'X-test-header' => '42'})
     status.must_equal 200
-    response["REQUEST_METHOD"].must_equal "POST"
+    response["request_method"].must_equal "POST"
     response["script_name"].must_equal "/test.fcgi"
     response["REQUEST_PATH"].must_equal "/"
-    response["QUERY_STRING"].must_equal ""
+    response["query_string"].must_equal ""
     response["HTTP_X_TEST_HEADER"].must_equal "42"
     response["test.postdata"].must_equal "rack-form-data=23"
   end

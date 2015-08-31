@@ -49,7 +49,7 @@ describe Rack::Session::Pool do
   it "determines session from a cookie" do
     pool = Rack::Session::Pool.new(incrementor)
     req = Rack::MockRequest.new(pool)
-    cookie = req.get("/")["Set-Cookie"]
+    cookie = req.get("/")["set-cookie"]
     req.get("/", "http_cookie" => cookie).
       body.must_equal '{"counter"=>2}'
     req.get("/", "http_cookie" => cookie).
@@ -73,7 +73,7 @@ describe Rack::Session::Pool do
     pool.pool.size.must_equal 1
 
     res1 = req.get("/", "http_cookie" => cookie)
-    res1["Set-Cookie"].must_be_nil
+    res1["set-cookie"].must_be_nil
     res1.body.must_equal '{"counter"=>2}'
     pool.pool.size.must_equal 1
 

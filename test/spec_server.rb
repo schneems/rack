@@ -74,12 +74,12 @@ describe Rack::Server do
 
   it "support CGI" do
     begin
-      o, ENV["REQUEST_METHOD"] = ENV["REQUEST_METHOD"], 'foo'
+      o, ENV["request_method"] = ENV["request_method"], 'foo'
       server = Rack::Server.new(:app => 'foo')
       server.server.name =~ /CGI/
       Rack::Server.logging_middleware.call(server).must_equal nil
     ensure
-      ENV['REQUEST_METHOD'] = o
+      ENV['request_method'] = o
     end
   end
 

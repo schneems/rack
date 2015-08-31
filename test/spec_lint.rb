@@ -26,7 +26,7 @@ describe Rack::Lint do
 
     lambda {
       e = env
-      e.delete("REQUEST_METHOD")
+      e.delete("request_method")
       Rack::Lint.new(nil).call(e)
     }.must_raise(Rack::Lint::LintError).
       message.must_match(/missing required key REQUEST_METHOD/)
@@ -92,7 +92,7 @@ describe Rack::Lint do
       message.must_equal "rack.multipart.tempfile_factory return value must respond to #<<"
 
     lambda {
-      Rack::Lint.new(nil).call(env("REQUEST_METHOD" => "FUCKUP?"))
+      Rack::Lint.new(nil).call(env("request_method" => "FUCKUP?"))
     }.must_raise(Rack::Lint::LintError).
       message.must_match(/REQUEST_METHOD/)
 
@@ -107,7 +107,7 @@ describe Rack::Lint do
       message.must_match(/must start with/)
 
     lambda {
-      Rack::Lint.new(nil).call(env("CONTENT_LENGTH" => "xcii"))
+      Rack::Lint.new(nil).call(env("content-length" => "xcii"))
     }.must_raise(Rack::Lint::LintError).
       message.must_match(/Invalid CONTENT_LENGTH/)
 
@@ -472,12 +472,12 @@ describe Rack::Lint do
   it "notice HEAD errors" do
     Rack::Lint.new(lambda { |env|
                      [200, {"content-type" => "test/plain", "content-length" => "3"}, []]
-                   }).call(env({"REQUEST_METHOD" => "HEAD"})).first.must_equal 200
+                   }).call(env({"request_method" => "HEAD"})).first.must_equal 200
 
     lambda {
       Rack::Lint.new(lambda { |env|
                        [200, {"content-type" => "test/plain", "content-length" => "3"}, ["foo"]]
-                     }).call(env({"REQUEST_METHOD" => "HEAD"}))[2].each { }
+                     }).call(env({"request_method" => "HEAD"}))[2].each { }
     }.must_raise(Rack::Lint::LintError).
       message.must_match(/body was given for HEAD/)
   end

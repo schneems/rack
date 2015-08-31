@@ -14,8 +14,8 @@ describe Rack::Multipart do
     type = %(multipart/form-data; boundary=#{boundary})
     length = data.bytesize
 
-    { "CONTENT_TYPE" => type,
-      "CONTENT_LENGTH" => length.to_s,
+    { "content-type" => type,
+      "content-length" => length.to_s,
       :input => StringIO.new(data) }
   end
 
@@ -25,7 +25,7 @@ describe Rack::Multipart do
 
   it "return nil if content type is not multipart" do
     env = Rack::MockRequest.env_for("/",
-            "CONTENT_TYPE" => 'application/x-www-form-urlencoded')
+            "content-type" => 'application/x-www-form-urlencoded')
     Rack::Multipart.parse_multipart(env).must_equal nil
   end
 
@@ -84,7 +84,7 @@ describe Rack::Multipart do
 
   it "parse multipart form webkit style" do
     env = Rack::MockRequest.env_for '/', multipart_fixture(:webkit)
-    env['CONTENT_TYPE'] = "multipart/form-data; boundary=----WebKitFormBoundaryWLHCs9qmcJJoyjKR"
+    env['content-type'] = "multipart/form-data; boundary=----WebKitFormBoundaryWLHCs9qmcJJoyjKR"
     params = Rack::Multipart.parse_multipart(env)
     params['profile']['bio'].must_include 'hello'
   end
@@ -126,8 +126,8 @@ describe Rack::Multipart do
     end
 
     fixture = {
-      "CONTENT_TYPE" => "multipart/form-data; boundary=AaB03x",
-      "CONTENT_LENGTH" => rd.length.to_s,
+      "content-type" => "multipart/form-data; boundary=AaB03x",
+      "content-length" => rd.length.to_s,
       :input => rd,
     }
 
@@ -454,8 +454,8 @@ Content-Type: image/jpeg\r
     data  = Rack::Multipart.build_multipart("submit-name" => "Larry", "files" => files)
 
     options = {
-      "CONTENT_TYPE" => "multipart/form-data; boundary=AaB03x",
-      "CONTENT_LENGTH" => data.length.to_s,
+      "content-type" => "multipart/form-data; boundary=AaB03x",
+      "content-length" => data.length.to_s,
       :input => StringIO.new(data)
     }
     env = Rack::MockRequest.env_for("/", options)
@@ -470,8 +470,8 @@ Content-Type: image/jpeg\r
     data  = Rack::Multipart.build_multipart("people" => [{"submit-name" => "Larry", "files" => files}])
 
     options = {
-      "CONTENT_TYPE" => "multipart/form-data; boundary=AaB03x",
-      "CONTENT_LENGTH" => data.length.to_s,
+      "content-type" => "multipart/form-data; boundary=AaB03x",
+      "content-length" => data.length.to_s,
       :input => StringIO.new(data)
     }
     env = Rack::MockRequest.env_for("/", options)
@@ -485,8 +485,8 @@ Content-Type: image/jpeg\r
     input = File.read(multipart_file("bad_robots"))
 
     req = Rack::Request.new Rack::MockRequest.env_for("/",
-                      "CONTENT_TYPE" => "multipart/form-data, boundary=1yy3laWhgX31qpiHinh67wJXqKalukEUTvqTzmon",
-                      "CONTENT_LENGTH" => input.size,
+                      "content-type" => "multipart/form-data, boundary=1yy3laWhgX31qpiHinh67wJXqKalukEUTvqTzmon",
+                      "content-length" => input.size,
                       :input => input)
 
     req.POST['file.path'].must_equal "/var/tmp/uploads/4/0001728414"
@@ -500,8 +500,8 @@ Content-Type: image/jpeg\r
 
       data = File.open(multipart_file("fail_16384_nofile"), 'rb') { |f| f.read }.gsub(/\n/, "\r\n")
       options = {
-        "CONTENT_TYPE" => "multipart/form-data; boundary=----WebKitFormBoundaryWsY0GnpbI5U7ztzo",
-        "CONTENT_LENGTH" => data.length.to_s,
+        "content-type" => "multipart/form-data; boundary=----WebKitFormBoundaryWsY0GnpbI5U7ztzo",
+        "content-length" => data.length.to_s,
         :input => StringIO.new(data)
       }
       env = Rack::MockRequest.env_for("/", options)
@@ -567,8 +567,8 @@ Very very blue\r
 --1yy3laWhgX31qpiHinh67wJXqKalukEUTvqTzmon--\r
 EOF
     options = {
-      "CONTENT_TYPE" => "multipart/form-data; boundary=1yy3laWhgX31qpiHinh67wJXqKalukEUTvqTzmon",
-      "CONTENT_LENGTH" => data.length.to_s,
+      "content-type" => "multipart/form-data; boundary=1yy3laWhgX31qpiHinh67wJXqKalukEUTvqTzmon",
+      "content-length" => data.length.to_s,
       :input => StringIO.new(data)
     }
     env = Rack::MockRequest.env_for("/", options)
@@ -579,8 +579,8 @@ EOF
 
   it "parse multipart upload with no content-length header" do
     env = Rack::MockRequest.env_for '/', multipart_fixture(:webkit)
-    env['CONTENT_TYPE'] = "multipart/form-data; boundary=----WebKitFormBoundaryWLHCs9qmcJJoyjKR"
-    env.delete 'CONTENT_LENGTH'
+    env['content-type'] = "multipart/form-data; boundary=----WebKitFormBoundaryWLHCs9qmcJJoyjKR"
+    env.delete 'content-length'
     params = Rack::Multipart.parse_multipart(env)
     params['profile']['bio'].must_include 'hello'
   end
@@ -596,8 +596,8 @@ contents\r
     EOF
 
     options = {
-      "CONTENT_TYPE" => "multipart/form-data; boundary=AaB03x",
-      "CONTENT_LENGTH" => data.length.to_s,
+      "content-type" => "multipart/form-data; boundary=AaB03x",
+      "content-length" => data.length.to_s,
       :input => StringIO.new(data)
     }
     env = Rack::MockRequest.env_for("/", options)
@@ -613,8 +613,8 @@ contents\r
     type = "Multipart/Form-Data; Boundary=AaB03x"
     length = data.bytesize
 
-    e = { "CONTENT_TYPE" => type,
-      "CONTENT_LENGTH" => length.to_s,
+    e = { "content-type" => type,
+      "content-length" => length.to_s,
       :input => StringIO.new(data) }
 
     env = Rack::MockRequest.env_for("/", e)
@@ -650,8 +650,8 @@ Content-Type: image/png\r
     EOF
 
     options = {
-      "CONTENT_TYPE" => "multipart/related; boundary=AaB03x",
-      "CONTENT_LENGTH" => data.bytesize.to_s,
+      "content-type" => "multipart/related; boundary=AaB03x",
+      "content-length" => data.bytesize.to_s,
       :input => StringIO.new(data)
     }
     env = Rack::MockRequest.env_for("/", options)

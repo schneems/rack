@@ -151,11 +151,11 @@ describe Rack::File do
 
   it "support custom http headers" do
     env = Rack::MockRequest.env_for("/cgi/test")
-    status, heads, _ = file(DOCROOT, 'Cache-Control' => 'public, max-age=38',
+    status, heads, _ = file(DOCROOT, 'cache-control' => 'public, max-age=38',
      'Access-Control-Allow-Origin' => '*').call(env)
 
     status.must_equal 200
-    heads['Cache-Control'].must_equal 'public, max-age=38'
+    heads['cache-control'].must_equal 'public, max-age=38'
     heads['Access-Control-Allow-Origin'].must_equal '*'
   end
 
@@ -164,7 +164,7 @@ describe Rack::File do
     status, heads, _ = file(DOCROOT).call(env)
 
     status.must_equal 200
-    heads['Cache-Control'].must_equal nil
+    heads['cache-control'].must_equal nil
     heads['Access-Control-Allow-Origin'].must_equal nil
   end
 

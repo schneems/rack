@@ -29,10 +29,10 @@ module Rack
     def path_info;       @env[PATH_INFO].to_s                     end
     def request_method;  @env[REQUEST_METHOD]                     end
     def query_string;    @env[QUERY_STRING].to_s                  end
-    def content_length;  @env['CONTENT_LENGTH']                   end
+    def content_length;  @env['content-length']                   end
 
     def content_type
-      content_type = @env['CONTENT_TYPE']
+      content_type = @env['content-type']
       content_type.nil? || content_type.empty? ? nil : content_type
     end
 

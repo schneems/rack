@@ -189,7 +189,7 @@ describe Rack::Request do
 
   it "not truncate query strings containing semi-colons #543 only in POST" do
     mr = Rack::MockRequest.env_for("/",
-      "REQUEST_METHOD" => 'POST',
+      "request_method" => 'POST',
       :input => "foo=bar&quux=b;la")
     req = Rack::Request.new mr
     req.query_string.must_equal ""
@@ -254,7 +254,7 @@ describe Rack::Request do
 
   it "not unify GET and POST when calling params" do
     mr = Rack::MockRequest.env_for("/?foo=quux",
-      "REQUEST_METHOD" => 'POST',
+      "request_method" => 'POST',
       :input => "foo=bar&quux=bla"
     )
     req = Rack::Request.new mr
@@ -280,7 +280,7 @@ describe Rack::Request do
       end
     end
     mr = Rack::MockRequest.env_for("/?foo=quux",
-      "REQUEST_METHOD" => 'POST',
+      "request_method" => 'POST',
       :input => "foo=bar&quux=bla"
     )
     req = c.new mr
@@ -296,7 +296,7 @@ describe Rack::Request do
 
   it "raise if input params has invalid %-encoding" do
     mr = Rack::MockRequest.env_for("/?foo=quux",
-      "REQUEST_METHOD" => 'POST',
+      "request_method" => 'POST',
       :input => "a%=1"
     )
     req = Rack::Request.new mr
@@ -313,7 +313,7 @@ describe Rack::Request do
   it "parse POST data when method is POST and no Content-Type given" do
     req = Rack::Request.new \
       Rack::MockRequest.env_for("/?foo=quux",
-        "REQUEST_METHOD" => 'POST',
+        "request_method" => 'POST',
         :input => "foo=bar&quux=bla")
     req.content_type.must_be_nil
     req.media_type.must_be_nil
@@ -325,7 +325,7 @@ describe Rack::Request do
 
   it "limit the keys from the POST form data" do
     env = Rack::MockRequest.env_for("",
-            "REQUEST_METHOD" => 'POST',
+            "request_method" => 'POST',
             :input => "foo=bar&quux=bla")
 
     old, Rack::Utils.key_space_limit = Rack::Utils.key_space_limit, 1
@@ -340,7 +340,7 @@ describe Rack::Request do
   it "parse POST data with explicit content type regardless of method" do
     req = Rack::Request.new \
       Rack::MockRequest.env_for("/",
-        "CONTENT_TYPE" => 'application/x-www-form-urlencoded;foo=bar',
+        "content-type" => 'application/x-www-form-urlencoded;foo=bar',
         :input => "foo=bar&quux=bla")
     req.content_type.must_equal 'application/x-www-form-urlencoded;foo=bar'
     req.media_type.must_equal 'application/x-www-form-urlencoded'
@@ -352,8 +352,8 @@ describe Rack::Request do
   it "not parse POST data when media type is not form-data" do
     req = Rack::Request.new \
       Rack::MockRequest.env_for("/?foo=quux",
-        "REQUEST_METHOD" => 'POST',
-        "CONTENT_TYPE" => 'text/plain;charset=utf-8',
+        "request_method" => 'POST',
+        "content-type" => 'text/plain;charset=utf-8',
         :input => "foo=bar&quux=bla")
     req.content_type.must_equal 'text/plain;charset=utf-8'
     req.media_type.must_equal 'text/plain'
@@ -366,8 +366,8 @@ describe Rack::Request do
   it "parse POST data on PUT when media type is form-data" do
     req = Rack::Request.new \
       Rack::MockRequest.env_for("/?foo=quux",
-        "REQUEST_METHOD" => 'PUT',
-        "CONTENT_TYPE" => 'application/x-www-form-urlencoded',
+        "request_method" => 'PUT',
+        "content-type" => 'application/x-www-form-urlencoded',
         :input => "foo=bar&quux=bla")
     req.POST.must_equal "foo" => "bar", "quux" => "bla"
     req.body.read.must_equal "foo=bar&quux=bla"
@@ -377,7 +377,7 @@ describe Rack::Request do
     input = StringIO.new("foo=bar&quux=bla")
     req = Rack::Request.new \
       Rack::MockRequest.env_for("/",
-        "CONTENT_TYPE" => 'application/x-www-form-urlencoded;foo=bar',
+        "content-type" => 'application/x-www-form-urlencoded;foo=bar',
         :input => input)
     req.params.must_equal "foo" => "bar", "quux" => "bla"
     input.read.must_equal "foo=bar&quux=bla"
@@ -385,9 +385,9 @@ describe Rack::Request do
 
   it "safely accepts POST requests with empty body" do
     mr = Rack::MockRequest.env_for("/",
-      "REQUEST_METHOD" => "POST",
-      "CONTENT_TYPE"   => "multipart/form-data, boundary=AaB03x",
-      "CONTENT_LENGTH" => '0',
+      "request_method" => "POST",
+      "content-type"   => "multipart/form-data, boundary=AaB03x",
+      "content-length" => '0',
       :input => nil)
 
     req = Rack::Request.new mr
@@ -400,7 +400,7 @@ describe Rack::Request do
   it "clean up Safari's ajax POST body" do
     req = Rack::Request.new \
       Rack::MockRequest.env_for("/",
-        'REQUEST_METHOD' => 'POST', :input => "foo=bar&quux=bla\0")
+        'request_method' => 'POST', :input => "foo=bar&quux=bla\0")
     req.POST.must_equal "foo" => "bar", "quux" => "bla"
   end
 
@@ -465,24 +465,24 @@ describe Rack::Request do
 
   it "treat empty content type as nil" do
     req = Rack::Request.new \
-      Rack::MockRequest.env_for("/", "CONTENT_TYPE" => "")
+      Rack::MockRequest.env_for("/", "content-type" => "")
     req.content_type.must_equal nil
   end
 
   it "return nil media type for empty content type" do
     req = Rack::Request.new \
-      Rack::MockRequest.env_for("/", "CONTENT_TYPE" => "")
+      Rack::MockRequest.env_for("/", "content-type" => "")
     req.media_type.must_equal nil
   end
 
   it "cache, but invalidates the cache" do
     req = Rack::Request.new \
       Rack::MockRequest.env_for("/?foo=quux",
-        "CONTENT_TYPE" => "application/x-www-form-urlencoded",
+        "content-type" => "application/x-www-form-urlencoded",
         :input => "foo=bar&quux=bla")
     req.GET.must_equal "foo" => "quux"
     req.GET.must_equal "foo" => "quux"
-    req.env["QUERY_STRING"] = "bla=foo"
+    req.env["query_string"] = "bla=foo"
     req.GET.must_equal "bla" => "foo"
     req.GET.must_equal "bla" => "foo"
 
@@ -507,7 +507,7 @@ describe Rack::Request do
     request.scheme.must_equal "http"
     request.wont_be :ssl?
 
-    request = Rack::Request.new(Rack::MockRequest.env_for("/", 'HTTPS' => 'on'))
+    request = Rack::Request.new(Rack::MockRequest.env_for("/", 'https' => 'on'))
     request.scheme.must_equal "https"
     request.must_be :ssl?
 
@@ -519,7 +519,7 @@ describe Rack::Request do
     request.scheme.must_equal "http"
     request.wont_be :ssl?
 
-    request = Rack::Request.new(Rack::MockRequest.env_for("/", 'http_host' => 'www.example.org:8443', 'HTTPS' => 'on'))
+    request = Rack::Request.new(Rack::MockRequest.env_for("/", 'http_host' => 'www.example.org:8443', 'https' => 'on'))
     request.scheme.must_equal "https"
     request.must_be :ssl?
 
@@ -587,7 +587,7 @@ describe Rack::Request do
   end
 
   it "modify params hash if param is in POST" do
-    e = Rack::MockRequest.env_for("", "REQUEST_METHOD" => 'POST', :input => 'foo=duh')
+    e = Rack::MockRequest.env_for("", "request_method" => 'POST', :input => 'foo=duh')
     req1 = Rack::Request.new(e)
     req1.params.must_equal 'foo' => 'duh'
     req1.update_param 'foo', 'bar'
@@ -617,7 +617,7 @@ describe Rack::Request do
   end
 
   it "modify params hash by changing only POST" do
-    e = Rack::MockRequest.env_for("", "REQUEST_METHOD" => 'POST', :input => "foo=duhpost")
+    e = Rack::MockRequest.env_for("", "request_method" => 'POST', :input => "foo=duhpost")
     req = Rack::Request.new(e)
     req.GET.must_equal({})
     req.POST.must_equal 'foo' => 'duhpost'
@@ -627,7 +627,7 @@ describe Rack::Request do
   end
 
   it "modify params hash, even if param is defined in both POST and GET" do
-    e = Rack::MockRequest.env_for("?foo=duhget", "REQUEST_METHOD" => 'POST', :input => "foo=duhpost")
+    e = Rack::MockRequest.env_for("?foo=duhget", "request_method" => 'POST', :input => "foo=duhpost")
     req1 = Rack::Request.new(e)
     req1.GET.must_equal 'foo' => 'duhget'
     req1.POST.must_equal 'foo' => 'duhpost'
@@ -654,7 +654,7 @@ describe Rack::Request do
   end
 
   it "allow deleting from params hash if param is in POST" do
-    e = Rack::MockRequest.env_for("", "REQUEST_METHOD" => 'POST', :input => 'foo=bar')
+    e = Rack::MockRequest.env_for("", "request_method" => 'POST', :input => 'foo=bar')
     req1 = Rack::Request.new(e)
     req1.params.must_equal 'foo' => 'bar'
     req1.delete_param('foo').must_equal 'bar'
@@ -753,7 +753,7 @@ describe Rack::Request do
   it "handle multiple media type parameters" do
     req = Rack::Request.new \
       Rack::MockRequest.env_for("/",
-        "CONTENT_TYPE" => 'text/plain; foo=BAR,baz=bizzle dizzle;BLING=bam;blong="boo";zump="zoo\"o";weird=lol"')
+        "content-type" => 'text/plain; foo=BAR,baz=bizzle dizzle;BLING=bam;blong="boo";zump="zoo\"o";weird=lol"')
       req.wont_be :form_data?
       req.media_type_params.must_include 'foo'
       req.media_type_params['foo'].must_equal 'BAR'
@@ -785,8 +785,8 @@ Content-Transfer-Encoding: base64\r
 --AaB03x--\r
 EOF
     req = Rack::Request.new Rack::MockRequest.env_for("/",
-                      "CONTENT_TYPE" => "multipart/form-data, boundary=AaB03x",
-                      "CONTENT_LENGTH" => input.size,
+                      "content-type" => "multipart/form-data, boundary=AaB03x",
+                      "content-length" => input.size,
                       :input => input)
 
     req.POST.must_include "fileupload"
@@ -824,8 +824,8 @@ Content-Transfer-Encoding: base64
 --AaB03x--
 EOF
     req = Rack::Request.new Rack::MockRequest.env_for("/",
-                      "CONTENT_TYPE" => "multipart/form-data, boundary=AaB03x",
-                      "CONTENT_LENGTH" => input.size,
+                      "content-type" => "multipart/form-data, boundary=AaB03x",
+                      "content-length" => input.size,
                       :input => input)
 
     lambda{req.POST}.must_raise EOFError
@@ -848,8 +848,8 @@ Content-Transfer-Encoding: base64\r
 --AaB03x--\r
 EOF
     req = Rack::Request.new Rack::MockRequest.env_for("/",
-                      "CONTENT_TYPE" => "multipart/form-data, boundary=AaB03x",
-                      "CONTENT_LENGTH" => input.size,
+                      "content-type" => "multipart/form-data, boundary=AaB03x",
+                      "content-length" => input.size,
                       :input => input)
 
     req.POST.must_include "fileupload"
@@ -877,8 +877,8 @@ EOF
       data += "--AaB03x--\r"
 
       options = {
-        "CONTENT_TYPE" => "multipart/form-data; boundary=AaB03x",
-        "CONTENT_LENGTH" => data.length.to_s,
+        "content-type" => "multipart/form-data; boundary=AaB03x",
+        "content-length" => data.length.to_s,
         :input => StringIO.new(data)
       }
 
@@ -894,8 +894,8 @@ EOF
 
       files = []
       options = {
-        "CONTENT_TYPE" => "multipart/form-data; boundary=AaB03x",
-        "CONTENT_LENGTH" => data.length.to_s,
+        "content-type" => "multipart/form-data; boundary=AaB03x",
+        "content-length" => data.length.to_s,
         Rack::RACK_MULTIPART_TEMPFILE_FACTORY => lambda { |filename, content_type|
           file = Tempfile.new(["RackMultipart", ::File.extname(filename)])
           files << file
@@ -926,8 +926,8 @@ content-disposition: form-data; name="mean"; filename="mean"\r
 --AaB03x--\r
 EOF
     req = Rack::Request.new Rack::MockRequest.env_for("/",
-                      "CONTENT_TYPE" => "multipart/form-data, boundary=AaB03x",
-                      "CONTENT_LENGTH" => input.size,
+                      "content-type" => "multipart/form-data, boundary=AaB03x",
+                      "content-length" => input.size,
                       :input => input)
 
     req.POST["huge"][:tempfile].size.must_equal 32768
@@ -952,8 +952,8 @@ Content-Transfer-Encoding: base64\r
 --AaB03x--\r
 EOF
     env = Rack::MockRequest.env_for("/",
-                          "CONTENT_TYPE" => "multipart/form-data, boundary=AaB03x",
-                          "CONTENT_LENGTH" => input.size,
+                          "content-type" => "multipart/form-data, boundary=AaB03x",
+                          "content-length" => input.size,
                           :input => input)
     req = Rack::Request.new(env)
     req.params
@@ -966,8 +966,8 @@ EOF
 content-disposition: form-data; name="huge"; filename="huge"\r
 EOF
     req = Rack::Request.new Rack::MockRequest.env_for("/",
-                      "CONTENT_TYPE" => "multipart/form-data, boundary=AaB03x",
-                      "CONTENT_LENGTH" => input.size,
+                      "content-type" => "multipart/form-data, boundary=AaB03x",
+                      "content-length" => input.size,
                       :input => input)
 
     lambda { req.POST }.must_raise EOFError
@@ -979,8 +979,8 @@ content-disposition: form-data; name="huge"; filename="huge"\r
 foo\r
 EOF
     req = Rack::Request.new Rack::MockRequest.env_for("/",
-                      "CONTENT_TYPE" => "multipart/form-data, boundary=AaB03x",
-                      "CONTENT_LENGTH" => input.size,
+                      "content-type" => "multipart/form-data, boundary=AaB03x",
+                      "content-length" => input.size,
                       :input => input)
 
     lambda { req.POST }.must_raise EOFError
@@ -992,8 +992,8 @@ content-disposition: form-data; name="huge"; filename="huge"\r
 foo\r
 EOF
     req = Rack::Request.new Rack::MockRequest.env_for("/",
-                      "CONTENT_TYPE" => "multipart/form-data, boundary=AaB03x",
-                      "CONTENT_LENGTH" => input.size,
+                      "content-type" => "multipart/form-data, boundary=AaB03x",
+                      "content-length" => input.size,
                       :input => input)
 
     lambda { req.POST }.must_raise EOFError
@@ -1005,8 +1005,8 @@ EOF
 content-disposition: form-data; name="huge"; filename="huge"\r
 EOF
     req = Rack::Request.new Rack::MockRequest.env_for("/",
-                      "CONTENT_TYPE" => "multipart/form-data, boundary=AaB03x",
-                      "CONTENT_LENGTH" => input.size,
+                      "content-type" => "multipart/form-data, boundary=AaB03x",
+                      "content-length" => input.size,
                       :input => input)
 
     lambda { req.POST }.must_raise EOFError
@@ -1024,8 +1024,8 @@ foo\r
 --AaB03x--\r
 EOF
     req = Rack::Request.new Rack::MockRequest.env_for("/",
-                      "CONTENT_TYPE" => "multipart/related, boundary=AaB03x",
-                      "CONTENT_LENGTH" => input.size,
+                      "content-type" => "multipart/related, boundary=AaB03x",
+                      "content-length" => input.size,
                       :input => input)
 
     req.params.keys.must_equal ["<soap-start>"]
@@ -1042,8 +1042,8 @@ content-type: application/octet-stream\r
 EOF
 
         req = Rack::Request.new Rack::MockRequest.env_for("/",
-                          "CONTENT_TYPE" => "multipart/form-data, boundary=AaB03x",
-                          "CONTENT_LENGTH" => input.size,
+                          "content-type" => "multipart/form-data, boundary=AaB03x",
+                          "content-length" => input.size,
                           :input => input)
 
     req.POST["fileupload"][:tempfile].size.must_equal 4
@@ -1086,8 +1086,8 @@ Content-Transfer-Encoding: base64\r
 EOF
     input.force_encoding(Encoding::ASCII_8BIT)
     res = Rack::MockRequest.new(Rack::Lint.new(app)).get "/",
-      "CONTENT_TYPE" => "multipart/form-data, boundary=AaB03x",
-      "CONTENT_LENGTH" => input.size.to_s, "rack.input" => StringIO.new(input)
+      "content-type" => "multipart/form-data, boundary=AaB03x",
+      "content-length" => input.size.to_s, "rack.input" => StringIO.new(input)
 
     res.must_be :ok?
   end

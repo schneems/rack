@@ -230,7 +230,7 @@ describe Rack::Deflater do
     options = {
       'response_headers' => {
         'content-type' => 'text/plain',
-        'Cache-Control' => 'no-transform'
+        'cache-control' => 'no-transform'
       }
     }
     verify(200, 'Hello World!', { 'gzip' => nil }, options) do |status, headers, body|

@@ -312,8 +312,8 @@ module Rack
         env[PATH_INFO] =~ /\A\//
       }
       ## * The <tt>CONTENT_LENGTH</tt>, if given, must consist of digits only.
-      assert("Invalid CONTENT_LENGTH: #{env["CONTENT_LENGTH"]}") {
-        !env.include?("CONTENT_LENGTH") || env["CONTENT_LENGTH"] =~ /\A\d+\z/
+      assert("Invalid CONTENT_LENGTH: #{env["content-length"]}") {
+        !env.include?("content-length") || env["content-length"] =~ /\A\d+\z/
       }
 
       ## * One of <tt>SCRIPT_NAME</tt> or <tt>PATH_INFO</tt> must be

@@ -16,7 +16,7 @@ describe Rack::Chunked do
 
   before do
     @env = Rack::MockRequest.
-      env_for('/', 'HTTP_VERSION' => '1.1', 'REQUEST_METHOD' => 'GET')
+      env_for('/', 'HTTP_VERSION' => '1.1', 'request_method' => 'GET')
   end
 
   it 'chunk responses with no Content-Length' do

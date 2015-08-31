@@ -10,7 +10,7 @@ describe Rack::Auth::Digest::MD5 do
 
   def unprotected_app
     Rack::Lint.new lambda { |env|
-      friend = Rack::Utils.parse_query(env["QUERY_STRING"])["friend"]
+      friend = Rack::Utils.parse_query(env["query_string"])["friend"]
       [ 200, {'content-type' => 'text/plain'}, ["Hi #{env['REMOTE_USER']}#{friend ? " and #{friend}" : ''}"] ]
     }
   end

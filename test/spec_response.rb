@@ -53,50 +53,50 @@ describe Rack::Response do
     response = Rack::Response.new
 
     response.set_cookie "foo", "bar"
-    response["Set-Cookie"].must_equal "foo=bar"
+    response["set-cookie"].must_equal "foo=bar"
     response.set_cookie "foo2", "bar2"
-    response["Set-Cookie"].must_equal ["foo=bar", "foo2=bar2"].join("\n")
+    response["set-cookie"].must_equal ["foo=bar", "foo2=bar2"].join("\n")
     response.set_cookie "foo3", "bar3"
-    response["Set-Cookie"].must_equal ["foo=bar", "foo2=bar2", "foo3=bar3"].join("\n")
+    response["set-cookie"].must_equal ["foo=bar", "foo2=bar2", "foo3=bar3"].join("\n")
   end
 
   it "can set cookies with the same name for multiple domains" do
     response = Rack::Response.new
     response.set_cookie "foo", {:value => "bar", :domain => "sample.example.com"}
     response.set_cookie "foo", {:value => "bar", :domain => ".example.com"}
-    response["Set-Cookie"].must_equal ["foo=bar; domain=sample.example.com", "foo=bar; domain=.example.com"].join("\n")
+    response["set-cookie"].must_equal ["foo=bar; domain=sample.example.com", "foo=bar; domain=.example.com"].join("\n")
   end
 
   it "formats the Cookie expiration date accordingly to RFC 6265" do
     response = Rack::Response.new
 
     response.set_cookie "foo", {:value => "bar", :expires => Time.now+10}
-    response["Set-Cookie"].must_match(
+    response["set-cookie"].must_match(
       /expires=..., \d\d ... \d\d\d\d \d\d:\d\d:\d\d .../)
   end
 
   it "can set secure cookies" do
     response = Rack::Response.new
     response.set_cookie "foo", {:value => "bar", :secure => true}
-    response["Set-Cookie"].must_equal "foo=bar; secure"
+    response["set-cookie"].must_equal "foo=bar; secure"
   end
 
   it "can set http only cookies" do
     response = Rack::Response.new
     response.set_cookie "foo", {:value => "bar", :httponly => true}
-    response["Set-Cookie"].must_equal "foo=bar; HttpOnly"
+    response["set-cookie"].must_equal "foo=bar; HttpOnly"
   end
 
   it "can set http only cookies with :http_only" do
     response = Rack::Response.new
     response.set_cookie "foo", {:value => "bar", :http_only => true}
-    response["Set-Cookie"].must_equal "foo=bar; HttpOnly"
+    response["set-cookie"].must_equal "foo=bar; HttpOnly"
   end
 
   it "can set prefers :httponly for http only cookie setting when :httponly and :http_only provided" do
     response = Rack::Response.new
     response.set_cookie "foo", {:value => "bar", :httponly => false, :http_only => true}
-    response["Set-Cookie"].must_equal "foo=bar"
+    response["set-cookie"].must_equal "foo=bar"
   end
 
   it "can delete cookies" do
@@ -104,7 +104,7 @@ describe Rack::Response do
     response.set_cookie "foo", "bar"
     response.set_cookie "foo2", "bar2"
     response.delete_cookie "foo"
-    response["Set-Cookie"].must_equal [
+    response["set-cookie"].must_equal [
       "foo2=bar2",
       "foo=; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 -0000"
     ].join("\n")
@@ -114,11 +114,11 @@ describe Rack::Response do
     response = Rack::Response.new
     response.set_cookie "foo", {:value => "bar", :domain => "sample.example.com"}
     response.set_cookie "foo", {:value => "bar", :domain => ".example.com"}
-    response["Set-Cookie"].must_equal ["foo=bar; domain=sample.example.com", "foo=bar; domain=.example.com"].join("\n")
+    response["set-cookie"].must_equal ["foo=bar; domain=sample.example.com", "foo=bar; domain=.example.com"].join("\n")
     response.delete_cookie "foo", :domain => ".example.com"
-    response["Set-Cookie"].must_equal ["foo=bar; domain=sample.example.com", "foo=; domain=.example.com; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 -0000"].join("\n")
+    response["set-cookie"].must_equal ["foo=bar; domain=sample.example.com", "foo=; domain=.example.com; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 -0000"].join("\n")
     response.delete_cookie "foo", :domain => "sample.example.com"
-    response["Set-Cookie"].must_equal ["foo=; domain=.example.com; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 -0000",
+    response["set-cookie"].must_equal ["foo=; domain=.example.com; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 -0000",
                                          "foo=; domain=sample.example.com; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 -0000"].join("\n")
   end
 
@@ -126,11 +126,11 @@ describe Rack::Response do
     response = Rack::Response.new
     response.set_cookie "foo", {:value => "bar", :path => "/"}
     response.set_cookie "foo", {:value => "bar", :path => "/path"}
-    response["Set-Cookie"].must_equal ["foo=bar; path=/",
+    response["set-cookie"].must_equal ["foo=bar; path=/",
                                          "foo=bar; path=/path"].join("\n")
 
     response.delete_cookie "foo", :path => "/path"
-    response["Set-Cookie"].must_equal ["foo=bar; path=/",
+    response["set-cookie"].must_equal ["foo=bar; path=/",
                                          "foo=; path=/path; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 -0000"].join("\n")
   end
 

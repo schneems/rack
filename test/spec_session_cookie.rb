@@ -48,7 +48,7 @@ describe Rack::Session::Cookie do
   def response_for(options={})
     request_options = options.fetch(:request, {})
     cookie = if options[:cookie].is_a?(Rack::Response)
-      options[:cookie]["Set-Cookie"]
+      options[:cookie]["set-cookie"]
     else
       options[:cookie]
     end
@@ -165,14 +165,14 @@ describe Rack::Session::Cookie do
     }.new
     response = response_for(:app => [incrementor, { :coder => identity }])
 
-    response["Set-Cookie"].must_include "rack.session="
+    response["set-cookie"].must_include "rack.session="
     response.body.must_equal '{"counter"=>1}'
     identity.calls.must_equal [:decode, :encode]
   end
 
   it "creates a new cookie" do
     response = response_for(:app => incrementor)
-    response["Set-Cookie"].must_include "rack.session="
+    response["set-cookie"].must_include "rack.session="
     response.body.must_equal '{"counter"=>1}'
   end
 
@@ -188,15 +188,15 @@ describe Rack::Session::Cookie do
 
   it "renew session id" do
     response = response_for(:app => incrementor)
-    cookie   = response['Set-Cookie']
+    cookie   = response['set-cookie']
     response = response_for(:app => only_session_id, :cookie => cookie)
-    cookie   = response['Set-Cookie'] if response['Set-Cookie']
+    cookie   = response['set-cookie'] if response['set-cookie']
 
     response.body.wont_equal ""
     old_session_id = response.body
 
     response = response_for(:app => renewer, :cookie => cookie)
-    cookie   = response['Set-Cookie'] if response['Set-Cookie']
+    cookie   = response['set-cookie'] if response['set-cookie']
     response = response_for(:app => only_session_id, :cookie => cookie)
 
     response.body.wont_equal ""
@@ -273,7 +273,7 @@ describe Rack::Session::Cookie do
     response = response_for(:app => app, :cookie => response)
     response.body.must_equal '{"counter"=>2}'
 
-    _, digest = response["Set-Cookie"].split("--")
+    _, digest = response["set-cookie"].split("--")
     tampered_with_cookie = "hackerman-was-here" + "--" + digest
 
     response = response_for(:app => app, :cookie => tampered_with_cookie)
@@ -335,34 +335,34 @@ describe Rack::Session::Cookie do
     app = [incrementor, { :secure => true }]
 
     response = response_for(:app => app)
-    response["Set-Cookie"].must_be_nil
+    response["set-cookie"].must_be_nil
 
-    response = response_for(:app => app, :request => { "HTTPS" => "on" })
-    response["Set-Cookie"].wont_be :nil?
-    response["Set-Cookie"].must_match(/secure/)
+    response = response_for(:app => app, :request => { "https" => "on" })
+    response["set-cookie"].wont_be :nil?
+    response["set-cookie"].must_match(/secure/)
   end
 
   it "does not return a cookie if cookie was not read/written" do
     response = response_for(:app => nothing)
-    response["Set-Cookie"].must_be_nil
+    response["set-cookie"].must_be_nil
   end
 
   it "does not return a cookie if cookie was not written (only read)" do
     response = response_for(:app => session_id)
-    response["Set-Cookie"].must_be_nil
+    response["set-cookie"].must_be_nil
   end
 
   it "returns even if not read/written if :expire_after is set" do
     app = [nothing, { :expire_after => 3600 }]
     request = { "rack.session" => { "not" => "empty" }}
     response = response_for(:app => app, :request => request)
-    response["Set-Cookie"].wont_be :nil?
+    response["set-cookie"].wont_be :nil?
   end
 
   it "returns no cookie if no data was written and no session was created previously, even if :expire_after is set" do
     app = [nothing, { :expire_after => 3600 }]
     response = response_for(:app => app)
-    response["Set-Cookie"].must_be_nil
+    response["set-cookie"].must_be_nil
   end
 
   it "exposes :secret in env['rack.session.option']" do

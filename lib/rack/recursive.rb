@@ -54,7 +54,7 @@ module Rack
       env = env.merge(PATH_INFO => path,
                       SCRIPT_NAME => @script_name,
                       REQUEST_METHOD => GET,
-                      "CONTENT_LENGTH" => "0", "CONTENT_TYPE" => "",
+                      "content-length" => "0", "content-type" => "",
                       RACK_INPUT => StringIO.new(""))
       @app.call(env)
     end

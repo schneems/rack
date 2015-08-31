@@ -34,31 +34,31 @@ describe Rack::ETag do
   it "set Cache-Control to 'max-age=0, private, must-revalidate' (default) if none is set" do
     app = lambda { |env| [201, {'content-type' => 'text/plain'}, ["Hello, World!"]] }
     response = etag(app).call(request)
-    response[1]['Cache-Control'].must_equal 'max-age=0, private, must-revalidate'
+    response[1]['cache-control'].must_equal 'max-age=0, private, must-revalidate'
   end
 
   it "set Cache-Control to chosen one if none is set" do
     app = lambda { |env| [201, {'content-type' => 'text/plain'}, ["Hello, World!"]] }
     response = etag(app, nil, 'public').call(request)
-    response[1]['Cache-Control'].must_equal 'public'
+    response[1]['cache-control'].must_equal 'public'
   end
 
   it "set a given Cache-Control even if digest could not be calculated" do
     app = lambda { |env| [200, {'content-type' => 'text/plain'}, []] }
     response = etag(app, 'no-cache').call(request)
-    response[1]['Cache-Control'].must_equal 'no-cache'
+    response[1]['cache-control'].must_equal 'no-cache'
   end
 
   it "not set Cache-Control if it is already set" do
-    app = lambda { |env| [201, {'content-type' => 'text/plain', 'Cache-Control' => 'public'}, ["Hello, World!"]] }
+    app = lambda { |env| [201, {'content-type' => 'text/plain', 'cache-control' => 'public'}, ["Hello, World!"]] }
     response = etag(app).call(request)
-    response[1]['Cache-Control'].must_equal 'public'
+    response[1]['cache-control'].must_equal 'public'
   end
 
   it "not set Cache-Control if directive isn't present" do
     app = lambda { |env| [200, {'content-type' => 'text/plain'}, ["Hello, World!"]] }
     response = etag(app, nil, nil).call(request)
-    response[1]['Cache-Control'].must_equal nil
+    response[1]['cache-control'].must_equal nil
   end
 
   it "not change ETag if it is already set" do
@@ -92,7 +92,7 @@ describe Rack::ETag do
   end
 
   it "not set ETag if no-cache is given" do
-    app = lambda { |env| [200, {'content-type' => 'text/plain', 'Cache-Control' => 'no-cache, must-revalidate'}, ['Hello, World!']] }
+    app = lambda { |env| [200, {'content-type' => 'text/plain', 'cache-control' => 'no-cache, must-revalidate'}, ['Hello, World!']] }
     response = etag(app).call(request)
     response[1]['ETag'].must_be_nil
   end
