@@ -8,7 +8,7 @@ describe Rack::Head do
   def test_response(headers = {})
     body = StringIO.new "foo"
     app = lambda do |env|
-      [200, {"Content-type" => "test/plain", "Content-length" => "3"}, body]
+      [200, {"content-type" => "test/plain", "content-length" => "3"}, body]
     end
     request = Rack::MockRequest.env_for("/", headers)
     response = Rack::Lint.new(Rack::Head.new(app)).call(request)
@@ -18,26 +18,26 @@ describe Rack::Head do
 
   it "pass GET, POST, PUT, DELETE, OPTIONS, TRACE requests" do
     %w[GET POST PUT DELETE OPTIONS TRACE].each do |type|
-      resp, _ = test_response("REQUEST_METHOD" => type)
+      resp, _ = test_response("request_method" => type)
 
       resp[0].must_equal 200
-      resp[1].must_equal "Content-type" => "test/plain", "Content-length" => "3"
+      resp[1].must_equal "content-type" => "test/plain", "content-length" => "3"
       resp[2].to_enum.to_a.must_equal ["foo"]
     end
   end
 
   it "remove body from HEAD requests" do
-    resp, _ = test_response("REQUEST_METHOD" => "HEAD")
+    resp, _ = test_response("request_method" => "HEAD")
 
     resp[0].must_equal 200
-    resp[1].must_equal "Content-type" => "test/plain", "Content-length" => "3"
+    resp[1].must_equal "content-type" => "test/plain", "content-length" => "3"
     resp[2].to_enum.to_a.must_equal []
   end
 
   it "close the body when it is removed" do
-    resp, body = test_response("REQUEST_METHOD" => "HEAD")
+    resp, body = test_response("request_method" => "HEAD")
     resp[0].must_equal 200
-    resp[1].must_equal "Content-type" => "test/plain", "Content-length" => "3"
+    resp[1].must_equal "content-type" => "test/plain", "content-length" => "3"
     resp[2].to_enum.to_a.must_equal []
     body.wont_be :closed?
     resp[2].close

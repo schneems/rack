@@ -25,24 +25,24 @@ module Rack
     RELEASE
   end
 
-  HTTP_HOST         = 'HTTP_HOST'.freeze
-  HTTP_VERSION      = 'HTTP_VERSION'.freeze
-  HTTPS             = 'HTTPS'.freeze
-  PATH_INFO         = 'PATH_INFO'.freeze
-  REQUEST_METHOD    = 'REQUEST_METHOD'.freeze
-  REQUEST_PATH      = 'REQUEST_PATH'.freeze
-  SCRIPT_NAME       = 'SCRIPT_NAME'.freeze
-  QUERY_STRING      = 'QUERY_STRING'.freeze
-  SERVER_PROTOCOL   = 'SERVER_PROTOCOL'.freeze
-  SERVER_NAME       = 'SERVER_NAME'.freeze
-  SERVER_ADDR       = 'SERVER_ADDR'.freeze
-  SERVER_PORT       = 'SERVER_PORT'.freeze
-  CACHE_CONTROL     = 'Cache-Control'.freeze
-  CONTENT_LENGTH    = 'Content-Length'.freeze
-  CONTENT_TYPE      = 'Content-Type'.freeze
-  SET_COOKIE        = 'Set-Cookie'.freeze
-  TRANSFER_ENCODING = 'Transfer-Encoding'.freeze
-  HTTP_COOKIE       = 'HTTP_COOKIE'.freeze
+  HTTP_HOST         = 'http_host'.freeze
+  HTTP_VERSION      = 'http_version'.freeze
+  HTTPS             = 'https'.freeze
+  PATH_INFO         = 'path_info'.freeze
+  REQUEST_METHOD    = 'request_method'.freeze
+  REQUEST_PATH      = 'request_path'.freeze
+  SCRIPT_NAME       = 'script_name'.freeze
+  QUERY_STRING      = 'query_string'.freeze
+  SERVER_PROTOCOL   = 'server_protocol'.freeze
+  SERVER_NAME       = 'server_name'.freeze
+  SERVER_ADDR       = 'server_addr'.freeze
+  SERVER_PORT       = 'server_port'.freeze
+  CACHE_CONTROL     = 'cache-control'.freeze
+  CONTENT_LENGTH    = 'content-length'.freeze
+  CONTENT_TYPE      = 'content-type'.freeze
+  SET_COOKIE        = 'set-cookie'.freeze
+  TRANSFER_ENCODING = 'transfer-encoding'.freeze
+  HTTP_COOKIE       = 'http_cookie'.freeze
 
   # HTTP method verbs
   GET     = 'GET'.freeze

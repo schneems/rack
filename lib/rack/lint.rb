@@ -252,8 +252,8 @@ module Rack
       ## accepted specifications and must not be used otherwise.
       ##
 
-      %w[REQUEST_METHOD SERVER_NAME SERVER_PORT
-         QUERY_STRING
+      %w[request_method server_name server_port
+         query_string
          rack.version rack.input rack.errors
          rack.multithread rack.multiprocess rack.run_once].each { |header|
         assert("env missing required key #{header}") { env.include? header }
@@ -262,7 +262,7 @@ module Rack
       ## The environment must not contain the keys
       ## <tt>HTTP_CONTENT_TYPE</tt> or <tt>HTTP_CONTENT_LENGTH</tt>
       ## (use the versions without <tt>HTTP_</tt>).
-      %w[HTTP_CONTENT_TYPE HTTP_CONTENT_LENGTH].each { |header|
+      %w[http_content_type http_content_length].each { |header|
         assert("env contains #{header}, must use #{header[5,-1]}") {
           not env.include? header
         }
@@ -660,7 +660,7 @@ module Rack
       headers.each { |key, value|
         ## There must not be a <tt>Content-Type</tt>, when the +Status+ is 1xx,
         ## 204, 205 or 304.
-        if key.downcase == "content-type"
+        if key == "content-type"
           assert("Content-Type header found in #{status} response, not allowed") {
             not Rack::Utils::STATUS_WITH_NO_ENTITY_BODY.include? status.to_i
           }
@@ -672,7 +672,7 @@ module Rack
     ## === The Content-Length
     def check_content_length(status, headers)
       headers.each { |key, value|
-        if key.downcase == 'content-length'
+        if key == 'content-length'
           ## There must not be a <tt>Content-Length</tt> header when the
           ## +Status+ is 1xx, 204, 205 or 304.
           assert("Content-Length header found in #{status} response, not allowed") {
@@ -689,7 +689,7 @@ module Rack
           bytes == 0
         }
       elsif @content_length
-        assert("Content-Length header was #{@content_length}, but should be #{bytes}") {
+        assert("content-Length header was #{@content_length}, but should be #{bytes}") {
           @content_length == bytes.to_s
         }
       end
