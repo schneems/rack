@@ -14,6 +14,7 @@ module Rack
         args = [host, port, app, options]
         # Thin versions below 0.8.0 do not support additional options
         args.pop if ::Thin::VERSION::MAJOR < 1 && ::Thin::VERSION::MINOR < 8
+
         server = ::Thin::Server.new(*args)
         yield server if block_given?
         server.start

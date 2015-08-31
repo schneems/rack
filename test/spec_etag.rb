@@ -22,13 +22,13 @@ describe Rack::ETag do
   it "set ETag if none is set if status is 200" do
     app = lambda { |env| [200, {'content-type' => 'text/plain'}, ["Hello, World!"]] }
     response = etag(app).call(request)
-    response[1]['ETag'].must_equal "W/\"65a8e27d8879283831b664bd8b7f0ad4\""
+    response[1]['etag'].must_equal "W/\"65a8e27d8879283831b664bd8b7f0ad4\""
   end
 
   it "set ETag if none is set if status is 201" do
     app = lambda { |env| [201, {'content-type' => 'text/plain'}, ["Hello, World!"]] }
     response = etag(app).call(request)
-    response[1]['ETag'].must_equal "W/\"65a8e27d8879283831b664bd8b7f0ad4\""
+    response[1]['etag'].must_equal "W/\"65a8e27d8879283831b664bd8b7f0ad4\""
   end
 
   it "set Cache-Control to 'max-age=0, private, must-revalidate' (default) if none is set" do
@@ -62,39 +62,39 @@ describe Rack::ETag do
   end
 
   it "not change ETag if it is already set" do
-    app = lambda { |env| [200, {'content-type' => 'text/plain', 'ETag' => '"abc"'}, ["Hello, World!"]] }
+    app = lambda { |env| [200, {'content-type' => 'text/plain', 'etag' => '"abc"'}, ["Hello, World!"]] }
     response = etag(app).call(request)
-    response[1]['ETag'].must_equal "\"abc\""
+    response[1]['etag'].must_equal "\"abc\""
   end
 
   it "not set ETag if body is empty" do
-    app = lambda { |env| [200, {'content-type' => 'text/plain', 'Last-Modified' => Time.now.httpdate}, []] }
+    app = lambda { |env| [200, {'content-type' => 'text/plain', 'last-modified' => Time.now.httpdate}, []] }
     response = etag(app).call(request)
-    response[1]['ETag'].must_be_nil
+    response[1]['etag'].must_be_nil
   end
 
   it "not set ETag if Last-Modified is set" do
-    app = lambda { |env| [200, {'content-type' => 'text/plain', 'Last-Modified' => Time.now.httpdate}, ["Hello, World!"]] }
+    app = lambda { |env| [200, {'content-type' => 'text/plain', 'last-modified' => Time.now.httpdate}, ["Hello, World!"]] }
     response = etag(app).call(request)
-    response[1]['ETag'].must_be_nil
+    response[1]['etag'].must_be_nil
   end
 
   it "not set ETag if a sendfile_body is given" do
     app = lambda { |env| [200, {'content-type' => 'text/plain'}, sendfile_body] }
     response = etag(app).call(request)
-    response[1]['ETag'].must_be_nil
+    response[1]['etag'].must_be_nil
   end
 
   it "not set ETag if a status is not 200 or 201" do
     app = lambda { |env| [401, {'content-type' => 'text/plain'}, ['Access denied.']] }
     response = etag(app).call(request)
-    response[1]['ETag'].must_be_nil
+    response[1]['etag'].must_be_nil
   end
 
   it "not set ETag if no-cache is given" do
     app = lambda { |env| [200, {'content-type' => 'text/plain', 'cache-control' => 'no-cache, must-revalidate'}, ['Hello, World!']] }
     response = etag(app).call(request)
-    response[1]['ETag'].must_be_nil
+    response[1]['etag'].must_be_nil
   end
 
   it "close the original body" do

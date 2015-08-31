@@ -23,13 +23,13 @@ describe Rack::File do
     path = File.join(DOCROOT, "/cgi/test")
 
     res.must_be :ok?
-    res["Last-Modified"].must_equal File.mtime(path).httpdate
+    res["last-modified"].must_equal File.mtime(path).httpdate
   end
 
   it "return 304 if file isn't modified since last serve" do
     path = File.join(DOCROOT, "/cgi/test")
     res = Rack::MockRequest.new(file(DOCROOT)).
-      get("/cgi/test", 'HTTP_IF_MODIFIED_SINCE' => File.mtime(path).httpdate)
+      get("/cgi/test", 'http_if_modified_since' => File.mtime(path).httpdate)
 
     res.status.must_equal 304
     res.body.must_be :empty?
@@ -38,7 +38,7 @@ describe Rack::File do
   it "return the file if it's modified since last serve" do
     path = File.join(DOCROOT, "/cgi/test")
     res = Rack::MockRequest.new(file(DOCROOT)).
-      get("/cgi/test", 'HTTP_IF_MODIFIED_SINCE' => (File.mtime(path) - 100).httpdate)
+      get("/cgi/test", 'http_if_modified_since' => (File.mtime(path) - 100).httpdate)
 
     res.must_be :ok?
   end

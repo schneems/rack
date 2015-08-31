@@ -42,8 +42,8 @@ module Rack
   private
 
     def fresh?(env, headers)
-      modified_since = env['HTTP_IF_MODIFIED_SINCE']
-      none_match     = env['HTTP_IF_NONE_MATCH']
+      modified_since = env['http_if_modified_since']
+      none_match     = env['http_if_none_match']
 
       return false unless modified_since || none_match
 
@@ -54,11 +54,11 @@ module Rack
     end
 
     def etag_matches?(none_match, headers)
-      etag = headers['ETag'] and etag == none_match
+      etag = headers['etag'] and etag == none_match
     end
 
     def modified_since?(modified_since, headers)
-      last_modified = to_rfc2822(headers['Last-Modified']) and
+      last_modified = to_rfc2822(headers['last-modified']) and
         modified_since and
         modified_since >= last_modified
     end

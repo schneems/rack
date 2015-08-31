@@ -533,14 +533,14 @@ end
 describe Rack::Utils::HeaderHash do
   it "retain header case" do
     h = Rack::Utils::HeaderHash.new("Content-MD5" => "d5ff4e2a0 ...")
-    h['ETag'] = 'Boo!'
-    h.to_hash.must_equal "Content-MD5" => "d5ff4e2a0 ...", "ETag" => 'Boo!'
+    h['etag'] = 'Boo!'
+    h.to_hash.must_equal "Content-MD5" => "d5ff4e2a0 ...", "etag" => 'Boo!'
   end
 
   it "check existence of keys case insensitively" do
     h = Rack::Utils::HeaderHash.new("Content-MD5" => "d5ff4e2a0 ...")
     h.must_include 'content-md5'
-    h.wont_include 'ETag'
+    h.wont_include 'etag'
   end
 
   it "create deep HeaderHash copy on dup" do
@@ -557,9 +557,9 @@ describe Rack::Utils::HeaderHash do
   end
 
   it "merge case-insensitively" do
-    h = Rack::Utils::HeaderHash.new("ETag" => 'HELLO', "content-length" => '123')
-    merged = h.merge("Etag" => 'WORLD', 'content-length' => '321', "Foo" => 'BAR')
-    merged.must_equal "Etag"=>'WORLD', "content-length"=>'321', "Foo"=>'BAR'
+    h = Rack::Utils::HeaderHash.new("etag" => 'HELLO', "content-length" => '123')
+    merged = h.merge("etag" => 'WORLD', 'content-length' => '321', "Foo" => 'BAR')
+    merged.must_equal "etag"=>'WORLD', "content-length"=>'321', "Foo"=>'BAR'
   end
 
   it "overwrite case insensitively and assume the new key's case" do

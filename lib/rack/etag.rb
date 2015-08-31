@@ -11,7 +11,7 @@ module Rack
   # used when Etag is absent and a directive when it is present. The first
   # defaults to nil, while the second defaults to "max-age=0, private, must-revalidate"
   class ETag
-    ETAG_STRING = 'ETag'.freeze
+    ETAG_STRING = 'etag'.freeze
     DEFAULT_CACHE_CONTROL = "max-age=0, private, must-revalidate".freeze
 
     def initialize(app, no_cache_control = nil, cache_control = DEFAULT_CACHE_CONTROL)
@@ -55,7 +55,7 @@ module Rack
 
       def skip_caching?(headers)
         (headers[CACHE_CONTROL] && headers[CACHE_CONTROL].include?('no-cache')) ||
-          headers.key?(ETAG_STRING) || headers.key?('Last-Modified')
+          headers.key?(ETAG_STRING) || headers.key?('last-modified')
       end
 
       def digest_body(body)

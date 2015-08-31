@@ -28,6 +28,7 @@ describe Rack::Handler::Thin do
 
   it "be a Thin" do
     GET("/")
+
     status.must_equal 200
     response["SERVER_SOFTWARE"].must_match(/thin/)
     response["HTTP_VERSION"].must_equal "HTTP/1.1"

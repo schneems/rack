@@ -212,7 +212,7 @@ describe Rack::Deflater do
     options = {
       'response_headers' => {
         'content-type' => 'text/plain',
-        'Last-Modified' => last_modified
+        'last-modified' => last_modified
       }
     }
 
@@ -220,7 +220,7 @@ describe Rack::Deflater do
       headers.must_equal({
         'Content-Encoding' => 'gzip',
         'Vary' => 'Accept-Encoding',
-        'Last-Modified' => last_modified,
+        'last-modified' => last_modified,
         'content-type' => 'text/plain'
       })
     end
