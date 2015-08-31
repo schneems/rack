@@ -96,7 +96,7 @@ describe Rack::Request do
       Rack::MockRequest.env_for("/", "http_host" => "localhost:81", "HTTP_X_FORWARDED_HOST" => "example.org:9292")
     req.host.must_equal "example.org"
 
-    env = Rack::MockRequest.env_for("/", "SERVER_ADDR" => "192.168.1.1", "server_port" => "9292")
+    env = Rack::MockRequest.env_for("/", "server_addr" => "192.168.1.1", "server_port" => "9292")
     env.delete("server_name")
     req = Rack::Request.new(env)
     req.host.must_equal "192.168.1.1"
