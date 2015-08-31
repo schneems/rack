@@ -52,7 +52,7 @@ describe Rack::Session::Cookie do
     else
       options[:cookie]
     end
-    request_options["HTTP_COOKIE"] = cookie || ""
+    request_options["http_cookie"] = cookie || ""
 
     app_with_cookie = Rack::Session::Cookie.new(*options[:app])
     app_with_cookie = Rack::Lint.new(app_with_cookie)

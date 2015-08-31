@@ -542,20 +542,20 @@ describe Rack::Request do
 
   it "parse cookies" do
     req = Rack::Request.new \
-      Rack::MockRequest.env_for("", "HTTP_COOKIE" => "foo=bar;quux=h&m")
+      Rack::MockRequest.env_for("", "http_cookie" => "foo=bar;quux=h&m")
     req.cookies.must_equal "foo" => "bar", "quux" => "h&m"
     req.cookies.must_equal "foo" => "bar", "quux" => "h&m"
-    req.env.delete("HTTP_COOKIE")
+    req.env.delete("http_cookie")
     req.cookies.must_equal({})
   end
 
   it "always return the same hash object" do
     req = Rack::Request.new \
-      Rack::MockRequest.env_for("", "HTTP_COOKIE" => "foo=bar;quux=h&m")
+      Rack::MockRequest.env_for("", "http_cookie" => "foo=bar;quux=h&m")
     hash = req.cookies
-    req.env.delete("HTTP_COOKIE")
+    req.env.delete("http_cookie")
     req.cookies.must_equal hash
-    req.env["HTTP_COOKIE"] = "zoo=m"
+    req.env["http_cookie"] = "zoo=m"
     req.cookies.must_equal hash
   end
 
@@ -664,19 +664,19 @@ describe Rack::Request do
   end
 
   it "pass through non-uri escaped cookies as-is" do
-    req = Rack::Request.new Rack::MockRequest.env_for("", "HTTP_COOKIE" => "foo=%")
+    req = Rack::Request.new Rack::MockRequest.env_for("", "http_cookie" => "foo=%")
     req.cookies["foo"].must_equal "%"
   end
 
   it "parse cookies according to RFC 2109" do
     req = Rack::Request.new \
-      Rack::MockRequest.env_for('', 'HTTP_COOKIE' => 'foo=bar;foo=car')
+      Rack::MockRequest.env_for('', 'http_cookie' => 'foo=bar;foo=car')
     req.cookies.must_equal 'foo' => 'bar'
   end
 
   it 'parse cookies with quotes' do
     req = Rack::Request.new Rack::MockRequest.env_for('', {
-      'HTTP_COOKIE' => '$Version="1"; Customer="WILE_E_COYOTE"; $Path="/acme"; Part_Number="Rocket_Launcher_0001"; $Path="/acme"'
+      'http_cookie' => '$Version="1"; Customer="WILE_E_COYOTE"; $Path="/acme"; Part_Number="Rocket_Launcher_0001"; $Path="/acme"'
     })
     req.cookies.must_equal({
       '$Version'    => '"1"',

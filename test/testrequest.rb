@@ -32,7 +32,7 @@ class TestRequest
 
     def GET(path, header={})
       Net::HTTP.start(@host, @port) { |http|
-        user = header.delete(:user)
+        user   = header.delete(:user)
         passwd = header.delete(:passwd)
 
         get = Net::HTTP::Get.new(path, header)

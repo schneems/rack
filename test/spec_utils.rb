@@ -346,19 +346,19 @@ describe Rack::Utils do
   end
 
   it "parse cookies" do
-    env = Rack::MockRequest.env_for("", "HTTP_COOKIE" => "zoo=m")
+    env = Rack::MockRequest.env_for("", "http_cookie" => "zoo=m")
     Rack::Utils.parse_cookies(env).must_equal({"zoo" => "m"})
 
-    env = Rack::MockRequest.env_for("", "HTTP_COOKIE" => "foo=%")
+    env = Rack::MockRequest.env_for("", "http_cookie" => "foo=%")
     Rack::Utils.parse_cookies(env).must_equal({"foo" => "%"})
 
-    env = Rack::MockRequest.env_for("", "HTTP_COOKIE" => "foo=bar;foo=car")
+    env = Rack::MockRequest.env_for("", "http_cookie" => "foo=bar;foo=car")
     Rack::Utils.parse_cookies(env).must_equal({"foo" => "bar"})
 
-    env = Rack::MockRequest.env_for("", "HTTP_COOKIE" => "foo=bar;quux=h&m")
+    env = Rack::MockRequest.env_for("", "http_cookie" => "foo=bar;quux=h&m")
     Rack::Utils.parse_cookies(env).must_equal({"foo" => "bar", "quux" => "h&m"})
 
-    env = Rack::MockRequest.env_for("", "HTTP_COOKIE" => "foo=bar").freeze
+    env = Rack::MockRequest.env_for("", "http_cookie" => "foo=bar").freeze
     Rack::Utils.parse_cookies(env).must_equal({"foo" => "bar"})
   end
 
