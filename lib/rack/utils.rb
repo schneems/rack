@@ -402,6 +402,7 @@ module Rack
           downcased_key = key.downcase
           if value = hash.key?(downcased_key)
             puts "DEPRECATED: header keys are expected to be downcased provided please change #{key} to #{downcased_key}"
+            puts caller.first(2)
             hash[downcased_key]
           end
         end

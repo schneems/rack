@@ -20,26 +20,26 @@ describe Rack::Chunked do
   end
 
   it 'chunk responses with no Content-Length' do
-    app = lambda { |env| [200, {"Content-Type" => "text/plain"}, ['Hello', ' ', 'World!']] }
+    app = lambda { |env| [200, {"content-type" => "text/plain"}, ['Hello', ' ', 'World!']] }
     response = Rack::MockResponse.new(*chunked(app).call(@env))
-    response.headers.wont_include 'Content-Length'
+    response.headers.wont_include 'content-length'
     response.headers['Transfer-Encoding'].must_equal 'chunked'
     response.body.must_equal "5\r\nHello\r\n1\r\n \r\n6\r\nWorld!\r\n0\r\n\r\n"
   end
 
   it 'chunks empty bodies properly' do
-    app = lambda { |env| [200, {"Content-Type" => "text/plain"}, []] }
+    app = lambda { |env| [200, {"content-type" => "text/plain"}, []] }
     response = Rack::MockResponse.new(*chunked(app).call(@env))
-    response.headers.wont_include 'Content-Length'
+    response.headers.wont_include 'content-length'
     response.headers['Transfer-Encoding'].must_equal 'chunked'
     response.body.must_equal "0\r\n\r\n"
   end
 
   it 'chunks encoded bodies properly' do
     body = ["\uFFFEHello", " ", "World"].map {|t| t.encode("UTF-16LE") }
-    app  = lambda { |env| [200, {"Content-Type" => "text/plain"}, body] }
+    app  = lambda { |env| [200, {"content-type" => "text/plain"}, body] }
     response = Rack::MockResponse.new(*chunked(app).call(@env))
-    response.headers.wont_include 'Content-Length'
+    response.headers.wont_include 'content-length'
     response.headers['Transfer-Encoding'].must_equal 'chunked'
     response.body.encoding.to_s.must_equal "ASCII-8BIT"
     response.body.must_equal "c\r\n\xFE\xFFH\x00e\x00l\x00l\x00o\x00\r\n2\r\n \x00\r\na\r\nW\x00o\x00r\x00l\x00d\x00\r\n0\r\n\r\n".force_encoding("BINARY")
@@ -48,17 +48,17 @@ describe Rack::Chunked do
 
   it 'not modify response when Content-Length header present' do
     app = lambda { |env|
-      [200, {"Content-Type" => "text/plain", 'Content-Length'=>'12'}, ['Hello', ' ', 'World!']]
+      [200, {"content-type" => "text/plain", 'content-length'=>'12'}, ['Hello', ' ', 'World!']]
     }
     status, headers, body = chunked(app).call(@env)
     status.must_equal 200
     headers.wont_include 'Transfer-Encoding'
-    headers.must_include 'Content-Length'
+    headers.must_include 'content-length'
     body.join.must_equal 'Hello World!'
   end
 
   it 'not modify response when client is HTTP/1.0' do
-    app = lambda { |env| [200, {"Content-Type" => "text/plain"}, ['Hello', ' ', 'World!']] }
+    app = lambda { |env| [200, {"content-type" => "text/plain"}, ['Hello', ' ', 'World!']] }
     @env['HTTP_VERSION'] = 'HTTP/1.0'
     status, headers, body = chunked(app).call(@env)
     status.must_equal 200
@@ -67,7 +67,7 @@ describe Rack::Chunked do
   end
 
   it 'not modify response when client is ancient, pre-HTTP/1.0' do
-    app = lambda { |env| [200, {"Content-Type" => "text/plain"}, ['Hello', ' ', 'World!']] }
+    app = lambda { |env| [200, {"content-type" => "text/plain"}, ['Hello', ' ', 'World!']] }
     check = lambda do
       status, headers, body = chunked(app).call(@env.dup)
       status.must_equal 200
@@ -84,7 +84,7 @@ describe Rack::Chunked do
 
   it 'not modify response when Transfer-Encoding header already present' do
     app = lambda { |env|
-      [200, {"Content-Type" => "text/plain", 'Transfer-Encoding' => 'identity'}, ['Hello', ' ', 'World!']]
+      [200, {"content-type" => "text/plain", 'Transfer-Encoding' => 'identity'}, ['Hello', ' ', 'World!']]
     }
     status, headers, body = chunked(app).call(@env)
     status.must_equal 200

@@ -14,7 +14,7 @@ describe Rack::Sendfile do
   end
 
   def simple_app(body=sendfile_body)
-    lambda { |env| [200, {'Content-Type' => 'text/plain'}, body] }
+    lambda { |env| [200, {'content-type' => 'text/plain'}, body] }
   end
 
   def sendfile_app(body, mappings = [])
@@ -45,7 +45,7 @@ describe Rack::Sendfile do
     request 'HTTP_X_SENDFILE_TYPE' => 'X-Sendfile' do |response|
       response.must_be :ok?
       response.body.must_be :empty?
-      response.headers['Content-Length'].must_equal '0'
+      response.headers['content-length'].must_equal '0'
       response.headers['X-Sendfile'].must_equal File.join(Dir.tmpdir,  "rack_sendfile")
     end
   end
@@ -54,7 +54,7 @@ describe Rack::Sendfile do
     request 'HTTP_X_SENDFILE_TYPE' => 'X-Lighttpd-Send-File' do |response|
       response.must_be :ok?
       response.body.must_be :empty?
-      response.headers['Content-Length'].must_equal '0'
+      response.headers['content-length'].must_equal '0'
       response.headers['X-Lighttpd-Send-File'].must_equal File.join(Dir.tmpdir,  "rack_sendfile")
     end
   end
@@ -67,7 +67,7 @@ describe Rack::Sendfile do
     request headers do |response|
       response.must_be :ok?
       response.body.must_be :empty?
-      response.headers['Content-Length'].must_equal '0'
+      response.headers['content-length'].must_equal '0'
       response.headers['X-Accel-Redirect'].must_equal '/foo/bar/rack_sendfile'
     end
   end
@@ -107,14 +107,14 @@ describe Rack::Sendfile do
       request({'HTTP_X_SENDFILE_TYPE' => 'X-Accel-Redirect'}, first_body, mappings) do |response|
         response.must_be :ok?
         response.body.must_be :empty?
-        response.headers['Content-Length'].must_equal '0'
+        response.headers['content-length'].must_equal '0'
         response.headers['X-Accel-Redirect'].must_equal '/foo/bar/rack_sendfile'
       end
 
       request({'HTTP_X_SENDFILE_TYPE' => 'X-Accel-Redirect'}, second_body, mappings) do |response|
         response.must_be :ok?
         response.body.must_be :empty?
-        response.headers['Content-Length'].must_equal '0'
+        response.headers['content-length'].must_equal '0'
         response.headers['X-Accel-Redirect'].must_equal '/wibble/rack_sendfile'
       end
     ensure

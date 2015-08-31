@@ -292,7 +292,7 @@ begin
       drop_counter = proc do |env|
         env['rack.session'].delete 'counter'
         env['rack.session']['foo'] = 'bar'
-        [200, {'Content-Type'=>'text/plain'}, env['rack.session'].inspect]
+        [200, {'content-type'=>'text/plain'}, env['rack.session'].inspect]
       end
       tses = Rack::Utils::Context.new pool, drop_counter
       treq = Rack::MockRequest.new(tses)

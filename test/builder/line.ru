@@ -1,1 +1,1 @@
-run lambda{ |env| [200, {'Content-Type' => 'text/plain'}, [__LINE__.to_s]] }
+run lambda{ |env| [200, {'content-type' => 'text/plain'}, [__LINE__.to_s]] }

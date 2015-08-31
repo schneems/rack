@@ -558,8 +558,8 @@ describe Rack::Utils::HeaderHash do
 
   it "merge case-insensitively" do
     h = Rack::Utils::HeaderHash.new("ETag" => 'HELLO', "content-length" => '123')
-    merged = h.merge("Etag" => 'WORLD', 'Content-Length' => '321', "Foo" => 'BAR')
-    merged.must_equal "Etag"=>'WORLD', "Content-Length"=>'321', "Foo"=>'BAR'
+    merged = h.merge("Etag" => 'WORLD', 'content-length' => '321', "Foo" => 'BAR')
+    merged.must_equal "Etag"=>'WORLD', "content-length"=>'321', "Foo"=>'BAR'
   end
 
   it "overwrite case insensitively and assume the new key's case" do
@@ -644,7 +644,7 @@ describe Rack::Utils::Context do
   test_target1 = proc{|e| e.to_s+' world' }
   test_target2 = proc{|e| e.to_i+2 }
   test_target3 = proc{|e| nil }
-  test_target4 = proc{|e| [200,{'Content-Type'=>'text/plain', 'Content-Length'=>'0'},['']] }
+  test_target4 = proc{|e| [200,{'content-type'=>'text/plain', 'content-length'=>'0'},['']] }
   test_app = ContextTest.new test_target4
 
   it "set context correctly" do

@@ -10,7 +10,7 @@ describe Rack::Auth::Basic do
 
   def unprotected_app
     Rack::Lint.new lambda { |env|
-      [ 200, {'Content-Type' => 'text/plain'}, ["Hi #{env['REMOTE_USER']}"] ]
+      [ 200, {'content-type' => 'text/plain'}, ["Hi #{env['REMOTE_USER']}"] ]
     }
   end
 

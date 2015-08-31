@@ -7,7 +7,7 @@ require 'stringio'
 
 class DummyApp
   def call(env)
-    [200, {"Content-Type" => "text/plain"}, ["Hello World"]]
+    [200, {"content-type" => "text/plain"}, ["Hello World"]]
   end
 end
 
@@ -90,7 +90,7 @@ describe Rack::Static do
     res = @gzip_request.get("/cgi/test", 'HTTP_ACCEPT_ENCODING'=>'deflate, gzip')
     res.must_be :ok?
     res.headers['Content-Encoding'].must_equal 'gzip'
-    res.headers['Content-Type'].must_equal 'text/plain'
+    res.headers['content-type'].must_equal 'text/plain'
     Zlib::GzipReader.wrap(StringIO.new(res.body), &:read).must_match(/ruby/)
   end
 
@@ -98,7 +98,7 @@ describe Rack::Static do
     res = @gzip_request.get("/cgi/rackup_stub.rb", 'HTTP_ACCEPT_ENCODING'=>'deflate, gzip')
     res.must_be :ok?
     res.headers['Content-Encoding'].must_equal nil
-    res.headers['Content-Type'].must_equal 'text/x-script.ruby'
+    res.headers['content-type'].must_equal 'text/x-script.ruby'
     res.body.must_match(/ruby/)
   end
 
@@ -106,7 +106,7 @@ describe Rack::Static do
     res = @gzip_request.get("/cgi/test")
     res.must_be :ok?
     res.headers['Content-Encoding'].must_equal nil
-    res.headers['Content-Type'].must_equal 'text/plain'
+    res.headers['content-type'].must_equal 'text/plain'
     res.body.must_match(/ruby/)
   end
 

@@ -8,7 +8,7 @@ describe Rack::URLMap do
       [200, {
         'X-ScriptName' => env['SCRIPT_NAME'],
         'X-PathInfo' => env['PATH_INFO'],
-        'Content-Type' => 'text/plain'
+        'content-type' => 'text/plain'
       }, [""]]
     }
     map = Rack::Lint.new(Rack::URLMap.new({
@@ -69,25 +69,25 @@ describe Rack::URLMap do
   it "dispatches hosts correctly" do
     map = Rack::Lint.new(Rack::URLMap.new("http://foo.org/" => lambda { |env|
                              [200,
-                              { "Content-Type" => "text/plain",
+                              { "content-type" => "text/plain",
                                 "X-Position" => "foo.org",
                                 "X-Host" => env["HTTP_HOST"] || env["SERVER_NAME"],
                               }, [""]]},
                            "http://subdomain.foo.org/" => lambda { |env|
                              [200,
-                              { "Content-Type" => "text/plain",
+                              { "content-type" => "text/plain",
                                 "X-Position" => "subdomain.foo.org",
                                 "X-Host" => env["HTTP_HOST"] || env["SERVER_NAME"],
                               }, [""]]},
                            "http://bar.org/" => lambda { |env|
                              [200,
-                              { "Content-Type" => "text/plain",
+                              { "content-type" => "text/plain",
                                 "X-Position" => "bar.org",
                                 "X-Host" => env["HTTP_HOST"] || env["SERVER_NAME"],
                               }, [""]]},
                            "/" => lambda { |env|
                              [200,
-                              { "Content-Type" => "text/plain",
+                              { "content-type" => "text/plain",
                                 "X-Position" => "default.org",
                                 "X-Host" => env["HTTP_HOST"] || env["SERVER_NAME"],
                               }, [""]]}
@@ -129,7 +129,7 @@ describe Rack::URLMap do
       Rack::URLMap.new("/bar" =>
         Rack::URLMap.new("/quux" =>  lambda { |env|
                            [200,
-                            { "Content-Type" => "text/plain",
+                            { "content-type" => "text/plain",
                               "X-Position" => "/foo/bar/quux",
                               "X-PathInfo" => env["PATH_INFO"],
                               "X-ScriptName" => env["SCRIPT_NAME"],
@@ -149,14 +149,14 @@ describe Rack::URLMap do
   it "route root apps correctly" do
     map = Rack::Lint.new(Rack::URLMap.new("/" => lambda { |env|
                              [200,
-                              { "Content-Type" => "text/plain",
+                              { "content-type" => "text/plain",
                                 "X-Position" => "root",
                                 "X-PathInfo" => env["PATH_INFO"],
                                 "X-ScriptName" => env["SCRIPT_NAME"]
                               }, [""]]},
                            "/foo" => lambda { |env|
                              [200,
-                              { "Content-Type" => "text/plain",
+                              { "content-type" => "text/plain",
                                 "X-Position" => "foo",
                                 "X-PathInfo" => env["PATH_INFO"],
                                 "X-ScriptName" => env["SCRIPT_NAME"]
@@ -191,14 +191,14 @@ describe Rack::URLMap do
   it "not squeeze slashes" do
     map = Rack::Lint.new(Rack::URLMap.new("/" => lambda { |env|
                              [200,
-                              { "Content-Type" => "text/plain",
+                              { "content-type" => "text/plain",
                                 "X-Position" => "root",
                                 "X-PathInfo" => env["PATH_INFO"],
                                 "X-ScriptName" => env["SCRIPT_NAME"]
                               }, [""]]},
                            "/foo" => lambda { |env|
                              [200,
-                              { "Content-Type" => "text/plain",
+                              { "content-type" => "text/plain",
                                 "X-Position" => "foo",
                                 "X-PathInfo" => env["PATH_INFO"],
                                 "X-ScriptName" => env["SCRIPT_NAME"]
@@ -215,7 +215,7 @@ describe Rack::URLMap do
   it "not be case sensitive with hosts" do
     map = Rack::Lint.new(Rack::URLMap.new("http://example.org/" => lambda { |env|
                              [200,
-                              { "Content-Type" => "text/plain",
+                              { "content-type" => "text/plain",
                                 "X-Position" => "root",
                                 "X-PathInfo" => env["PATH_INFO"],
                                 "X-ScriptName" => env["SCRIPT_NAME"]

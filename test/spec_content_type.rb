@@ -15,32 +15,32 @@ describe Rack::ContentType do
   it "set Content-Type to default text/html if none is set" do
     app = lambda { |env| [200, {}, "Hello, World!"] }
     headers = content_type(app).call(request)[1]
-    headers['Content-Type'].must_equal 'text/html'
+    headers['content-type'].must_equal 'text/html'
   end
 
   it "set Content-Type to chosen default if none is set" do
     app = lambda { |env| [200, {}, "Hello, World!"] }
     headers =
       content_type(app, 'application/octet-stream').call(request)[1]
-    headers['Content-Type'].must_equal 'application/octet-stream'
+    headers['content-type'].must_equal 'application/octet-stream'
   end
 
   it "not change Content-Type if it is already set" do
-    app = lambda { |env| [200, {'Content-Type' => 'foo/bar'}, "Hello, World!"] }
+    app = lambda { |env| [200, {'content-type' => 'foo/bar'}, "Hello, World!"] }
     headers = content_type(app).call(request)[1]
-    headers['Content-Type'].must_equal 'foo/bar'
+    headers['content-type'].must_equal 'foo/bar'
   end
 
   it "detect Content-Type case insensitive" do
-    app = lambda { |env| [200, {'CONTENT-Type' => 'foo/bar'}, "Hello, World!"] }
+    app = lambda { |env| [200, {'content-type' => 'foo/bar'}, "Hello, World!"] }
     headers = content_type(app).call(request)[1]
     headers.to_a.select { |k,v| k.downcase == "content-type" }.
-      must_equal [["CONTENT-Type","foo/bar"]]
+      must_equal [["content-type","foo/bar"]]
   end
 
   it "not set Content-Type on 304 responses" do
     app = lambda { |env| [304, {}, []] }
     response = content_type(app, "text/html").call(request)
-    response[1]['Content-Type'].must_equal nil
+    response[1]['content-type'].must_equal nil
   end
 end

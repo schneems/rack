@@ -113,12 +113,12 @@ module Rack
           params.update(Utils.parse_nested_query(env[QUERY_STRING]))
           env[QUERY_STRING] = Utils.build_nested_query(params)
         elsif !opts.has_key?(:input)
-          opts["CONTENT_TYPE"] = "application/x-www-form-urlencoded"
+          opts["content-type"] = "application/x-www-form-urlencoded"
           if params.is_a?(Hash)
             if data = Utils::Multipart.build_multipart(params)
               opts[:input] = data
-              opts["CONTENT_LENGTH"] ||= data.length.to_s
-              opts["CONTENT_TYPE"] = "multipart/form-data; boundary=#{Utils::Multipart::MULTIPART_BOUNDARY}"
+              opts["content-length"] ||= data.length.to_s
+              opts["content-type"] = "multipart/form-data; boundary=#{Utils::Multipart::MULTIPART_BOUNDARY}"
             else
               opts[:input] = Utils.build_nested_query(params)
             end
@@ -139,7 +139,7 @@ module Rack
       rack_input.set_encoding(Encoding::BINARY)
       env[RACK_INPUT] = rack_input
 
-      env["CONTENT_LENGTH"] ||= env[RACK_INPUT].length.to_s
+      env["content-length"] ||= env[RACK_INPUT].length.to_s
 
       opts.each { |field, value|
         env[field] = value  if String === field

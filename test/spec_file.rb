@@ -135,7 +135,7 @@ describe Rack::File do
     res = Rack::MockResponse.new(*file(DOCROOT).call(env))
 
     res.status.must_equal 206
-    res["Content-Length"].must_equal "12"
+    res["content-length"].must_equal "12"
     res["Content-Range"].must_equal "bytes 22-33/193"
     res.body.must_equal "-*- ruby -*-"
   end
@@ -198,28 +198,28 @@ describe Rack::File do
     req = Rack::MockRequest.new(Rack::Lint.new(Rack::File.new(DOCROOT)))
     res = req.head "/cgi/test"
     res.must_be :successful?
-    res['Content-Length'].must_equal "193"
+    res['content-length'].must_equal "193"
   end
 
   it "default to a mime type of text/plain" do
     req = Rack::MockRequest.new(Rack::Lint.new(Rack::File.new(DOCROOT)))
     res = req.get "/cgi/test"
     res.must_be :successful?
-    res['Content-Type'].must_equal "text/plain"
+    res['content-type'].must_equal "text/plain"
   end
 
   it "allow the default mime type to be set" do
     req = Rack::MockRequest.new(Rack::Lint.new(Rack::File.new(DOCROOT, nil, 'application/octet-stream')))
     res = req.get "/cgi/test"
     res.must_be :successful?
-    res['Content-Type'].must_equal "application/octet-stream"
+    res['content-type'].must_equal "application/octet-stream"
   end
 
   it "not set Content-Type if the mime type is not set" do
     req = Rack::MockRequest.new(Rack::Lint.new(Rack::File.new(DOCROOT, nil, nil)))
     res = req.get "/cgi/test"
     res.must_be :successful?
-    res['Content-Type'].must_equal nil
+    res['content-type'].must_equal nil
   end
 
 end

@@ -1,4 +1,4 @@
 =begin
 
 =end
-run lambda { |env| [200, {'Content-Type' => 'text/plain'}, ['OK']] }
+run lambda { |env| [200, {'content-type' => 'text/plain'}, ['OK']] }

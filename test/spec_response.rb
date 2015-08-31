@@ -39,14 +39,14 @@ describe Rack::Response do
 
   it "can set and read headers" do
     response = Rack::Response.new
-    response["Content-Type"].must_equal nil
-    response["Content-Type"] = "text/plain"
-    response["Content-Type"].must_equal "text/plain"
+    response["content-type"].must_equal nil
+    response["content-type"] = "text/plain"
+    response["content-type"].must_equal "text/plain"
   end
 
   it "can override the initial Content-Type with a different case" do
     response = Rack::Response.new("", 200, "content-type" => "text/plain")
-    response["Content-Type"].must_equal "text/plain"
+    response["content-type"].must_equal "text/plain"
   end
 
   it "can set cookies" do
@@ -193,8 +193,8 @@ describe Rack::Response do
     _, header, body = r.finish
     str = ""; body.each { |part| str << part }
     str.must_be :empty?
-    header["Content-Type"].must_equal nil
-    header['Content-Length'].must_equal nil
+    header["content-type"].must_equal nil
+    header['content-length'].must_equal nil
 
     lambda {
       Rack::Response.new(Object.new)
@@ -290,11 +290,11 @@ describe Rack::Response do
 
   it "provide access to the HTTP headers" do
     res = Rack::Response.new
-    res["Content-Type"] = "text/yaml"
+    res["content-type"] = "text/yaml"
 
-    res.must_include "Content-Type"
-    res.headers["Content-Type"].must_equal "text/yaml"
-    res["Content-Type"].must_equal "text/yaml"
+    res.must_include "content-type"
+    res.headers["content-type"].must_equal "text/yaml"
+    res["content-type"].must_equal "text/yaml"
     res.content_type.must_equal "text/yaml"
     res.content_length.must_be_nil
     res.location.must_be_nil
@@ -304,23 +304,23 @@ describe Rack::Response do
     res = Rack::Response.new
     res.status = 200
     res.finish
-    res.headers["Content-Length"].must_be_nil
+    res.headers["content-length"].must_be_nil
 
     res = Rack::Response.new
     res.status = 200
-    res.headers["Content-Length"] = "10"
+    res.headers["content-length"] = "10"
     res.finish
-    res.headers["Content-Length"].must_equal "10"
+    res.headers["content-length"].must_equal "10"
   end
 
   it "updates Content-Length when body appended to using #write" do
     res = Rack::Response.new
     res.status = 200
-    res.headers["Content-Length"].must_be_nil
+    res.headers["content-length"].must_be_nil
     res.write "Hi"
-    res.headers["Content-Length"].must_equal "2"
+    res.headers["content-length"].must_equal "2"
     res.write " there"
-    res.headers["Content-Length"].must_equal "8"
+    res.headers["content-length"].must_equal "8"
   end
 
   it "calls close on #body" do

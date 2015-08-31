@@ -6,7 +6,7 @@ require 'rack/mock'
 describe Rack::MethodOverride do
   def app
     Rack::Lint.new(Rack::MethodOverride.new(lambda {|e|
-      [200, {"Content-Type" => "text/plain"}, []]
+      [200, {"content-type" => "text/plain"}, []]
     }))
   end
 

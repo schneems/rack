@@ -12,7 +12,7 @@ describe Rack::Deflater do
     body = [body] if body.respond_to? :to_str
     app = lambda do |env|
       res = [status, options['response_headers'] || {}, body]
-      res[1]['Content-Type'] = 'text/plain' unless res[0] == 304
+      res[1]['content-type'] = 'text/plain' unless res[0] == 304
       res
     end
 
@@ -89,7 +89,7 @@ describe Rack::Deflater do
       headers.must_equal({
         'Content-Encoding' => 'deflate',
         'Vary' => 'Accept-Encoding',
-        'Content-Type' => 'text/plain'
+        'content-type' => 'text/plain'
       })
     end
   end
@@ -102,7 +102,7 @@ describe Rack::Deflater do
       headers.must_equal({
         'Content-Encoding' => 'deflate',
         'Vary' => 'Accept-Encoding',
-        'Content-Type' => 'text/plain'
+        'content-type' => 'text/plain'
       })
 
       buf = []
@@ -120,7 +120,7 @@ describe Rack::Deflater do
       headers.must_equal({
         'Content-Encoding' => 'deflate',
         'Vary' => 'Accept-Encoding',
-        'Content-Type' => 'text/plain'
+        'content-type' => 'text/plain'
       })
     end
   end
@@ -133,7 +133,7 @@ describe Rack::Deflater do
       headers.must_equal({
         'Content-Encoding' => 'gzip',
         'Vary' => 'Accept-Encoding',
-        'Content-Type' => 'text/plain'
+        'content-type' => 'text/plain'
       })
     end
   end
@@ -146,7 +146,7 @@ describe Rack::Deflater do
       headers.must_equal({
         'Content-Encoding' => 'gzip',
         'Vary' => 'Accept-Encoding',
-        'Content-Type' => 'text/plain'
+        'content-type' => 'text/plain'
       })
 
       buf = []
@@ -162,7 +162,7 @@ describe Rack::Deflater do
     verify(200, 'Hello world!', 'superzip') do |status, headers, body|
       headers.must_equal({
         'Vary' => 'Accept-Encoding',
-        'Content-Type' => 'text/plain'
+        'content-type' => 'text/plain'
       })
     end
   end
@@ -194,15 +194,15 @@ describe Rack::Deflater do
 
     verify(406, not_found_body1, 'identity;q=0', options1) do |status, headers, body|
       headers.must_equal({
-        'Content-Type' => 'text/plain',
-        'Content-Length' => not_found_body1.length.to_s
+        'content-type' => 'text/plain',
+        'content-length' => not_found_body1.length.to_s
       })
     end
 
     verify(406, not_found_body2, 'identity;q=0', options2) do |status, headers, body|
       headers.must_equal({
-        'Content-Type' => 'text/plain',
-        'Content-Length' => not_found_body2.length.to_s
+        'content-type' => 'text/plain',
+        'content-length' => not_found_body2.length.to_s
       })
     end
   end
@@ -211,7 +211,7 @@ describe Rack::Deflater do
     last_modified = Time.now.httpdate
     options = {
       'response_headers' => {
-        'Content-Type' => 'text/plain',
+        'content-type' => 'text/plain',
         'Last-Modified' => last_modified
       }
     }
@@ -221,7 +221,7 @@ describe Rack::Deflater do
         'Content-Encoding' => 'gzip',
         'Vary' => 'Accept-Encoding',
         'Last-Modified' => last_modified,
-        'Content-Type' => 'text/plain'
+        'content-type' => 'text/plain'
       })
     end
   end
@@ -229,7 +229,7 @@ describe Rack::Deflater do
   it 'do nothing when no-transform Cache-Control directive present' do
     options = {
       'response_headers' => {
-        'Content-Type' => 'text/plain',
+        'content-type' => 'text/plain',
         'Cache-Control' => 'no-transform'
       }
     }
@@ -241,7 +241,7 @@ describe Rack::Deflater do
   it 'do nothing when Content-Encoding already present' do
     options = {
       'response_headers' => {
-        'Content-Type' => 'text/plain',
+        'content-type' => 'text/plain',
         'Content-Encoding' => 'gzip'
       }
     }
@@ -251,7 +251,7 @@ describe Rack::Deflater do
   it 'deflate when Content-Encoding is identity' do
     options = {
       'response_headers' => {
-        'Content-Type' => 'text/plain',
+        'content-type' => 'text/plain',
         'Content-Encoding' => 'identity'
       }
     }
@@ -261,7 +261,7 @@ describe Rack::Deflater do
   it "deflate if content-type matches :include" do
     options = {
       'response_headers' => {
-        'Content-Type' => 'text/plain'
+        'content-type' => 'text/plain'
       },
       'deflater_options' => {
         :include => %w(text/plain)
@@ -273,7 +273,7 @@ describe Rack::Deflater do
   it "deflate if content-type is included it :include" do
     options = {
       'response_headers' => {
-        'Content-Type' => 'text/plain; charset=us-ascii'
+        'content-type' => 'text/plain; charset=us-ascii'
       },
       'deflater_options' => {
         :include => %w(text/plain)
@@ -294,7 +294,7 @@ describe Rack::Deflater do
   it "not deflate if content-type do not match :include" do
     options = {
       'response_headers' => {
-        'Content-Type' => 'text/plain'
+        'content-type' => 'text/plain'
       },
       'deflater_options' => {
         :include => %w(text/json)
@@ -326,11 +326,11 @@ describe Rack::Deflater do
     response_len = response.length
     options = {
       'response_headers' => {
-        'Content-Length' => response_len.to_s
+        'content-length' => response_len.to_s
       },
       'deflater_options' => {
         :if => lambda { |env, status, headers, body|
-          headers['Content-Length'].to_i >= response_len
+          headers['content-length'].to_i >= response_len
         }
       }
     }
