@@ -28,7 +28,7 @@ describe Rack::Handler::WEBrick do
     GET("/test")
     status.must_equal 200
     response["SERVER_SOFTWARE"].must_match(/WEBrick/)
-    response["HTTP_VERSION"].must_equal "HTTP/1.1"
+    response["http_version"].must_equal "HTTP/1.1"
     response["SERVER_PROTOCOL"].must_equal "HTTP/1.1"
     response["server_port"].must_equal "9202"
     response["server_name"].must_equal "127.0.0.1"

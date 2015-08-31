@@ -43,7 +43,7 @@ describe Rack::Handler::FastCGI do
     GET("/test.fcgi")
     status.must_equal 200
     response["SERVER_SOFTWARE"].must_match(/lighttpd/)
-    response["HTTP_VERSION"].must_equal "HTTP/1.1"
+    response["http_version"].must_equal "HTTP/1.1"
     response["SERVER_PROTOCOL"].must_equal "HTTP/1.1"
     response["server_port"].must_equal @port.to_s
     response["server_name"].must_equal @host
