@@ -34,7 +34,7 @@ describe Rack::MockRequest do
   it "return an environment with a path" do
     env = Rack::MockRequest.env_for("http://www.example.com/parse?location[]=1&location[]=2&age_group[]=2")
     env["QUERY_STRING"].must_equal "location[]=1&location[]=2&age_group[]=2"
-    env["PATH_INFO"].must_equal "/parse"
+    env["path_info"].must_equal "/parse"
     env.must_be_kind_of Hash
     env.must_include "rack.version"
   end
@@ -44,11 +44,11 @@ describe Rack::MockRequest do
 
     env = YAML.load(res.body)
     env["REQUEST_METHOD"].must_equal "GET"
-    env["SERVER_NAME"].must_equal "example.org"
-    env["SERVER_PORT"].must_equal "80"
+    env["server_name"].must_equal "example.org"
+    env["server_port"].must_equal "80"
     env["QUERY_STRING"].must_equal ""
-    env["PATH_INFO"].must_equal "/"
-    env["SCRIPT_NAME"].must_equal ""
+    env["path_info"].must_equal "/"
+    env["script_name"].must_equal ""
     env["rack.url_scheme"].must_equal "http"
     env["mock.postdata"].must_be :empty?
   end
@@ -103,10 +103,10 @@ describe Rack::MockRequest do
 
     env = YAML.load(res.body)
     env["REQUEST_METHOD"].must_equal "GET"
-    env["SERVER_NAME"].must_equal "bla.example.org"
-    env["SERVER_PORT"].must_equal "9292"
+    env["server_name"].must_equal "bla.example.org"
+    env["server_port"].must_equal "9292"
     env["QUERY_STRING"].must_equal "bar"
-    env["PATH_INFO"].must_equal "/meh/foo"
+    env["path_info"].must_equal "/meh/foo"
     env["rack.url_scheme"].must_equal "https"
   end
 
@@ -117,10 +117,10 @@ describe Rack::MockRequest do
 
     env = YAML.load(res.body)
     env["REQUEST_METHOD"].must_equal "GET"
-    env["SERVER_NAME"].must_equal "example.org"
-    env["SERVER_PORT"].must_equal "443"
+    env["server_name"].must_equal "example.org"
+    env["server_port"].must_equal "443"
     env["QUERY_STRING"].must_equal ""
-    env["PATH_INFO"].must_equal "/foo"
+    env["path_info"].must_equal "/foo"
     env["rack.url_scheme"].must_equal "https"
     env["HTTPS"].must_equal "on"
   end
@@ -132,10 +132,10 @@ describe Rack::MockRequest do
 
     env = YAML.load(res.body)
     env["REQUEST_METHOD"].must_equal "GET"
-    env["SERVER_NAME"].must_equal "example.org"
-    env["SERVER_PORT"].must_equal "80"
+    env["server_name"].must_equal "example.org"
+    env["server_port"].must_equal "80"
     env["QUERY_STRING"].must_equal ""
-    env["PATH_INFO"].must_equal "/foo"
+    env["path_info"].must_equal "/foo"
     env["rack.url_scheme"].must_equal "http"
   end
 
@@ -151,7 +151,7 @@ describe Rack::MockRequest do
     env["REQUEST_METHOD"].must_equal "GET"
     env["QUERY_STRING"].must_include "baz=2"
     env["QUERY_STRING"].must_include "foo[bar]=1"
-    env["PATH_INFO"].must_equal "/foo"
+    env["path_info"].must_equal "/foo"
     env["mock.postdata"].must_equal ""
   end
 
@@ -161,7 +161,7 @@ describe Rack::MockRequest do
     env["REQUEST_METHOD"].must_equal "GET"
     env["QUERY_STRING"].must_include "baz=2"
     env["QUERY_STRING"].must_include "foo[bar]=1"
-    env["PATH_INFO"].must_equal "/foo"
+    env["path_info"].must_equal "/foo"
     env["mock.postdata"].must_equal ""
   end
 
@@ -170,7 +170,7 @@ describe Rack::MockRequest do
     env = YAML.load(res.body)
     env["REQUEST_METHOD"].must_equal "POST"
     env["QUERY_STRING"].must_equal ""
-    env["PATH_INFO"].must_equal "/foo"
+    env["path_info"].must_equal "/foo"
     env["CONTENT_TYPE"].must_equal "application/x-www-form-urlencoded"
     env["mock.postdata"].must_equal "foo[bar]=1"
   end
@@ -180,7 +180,7 @@ describe Rack::MockRequest do
     env = YAML.load(res.body)
     env["REQUEST_METHOD"].must_equal "POST"
     env["QUERY_STRING"].must_equal ""
-    env["PATH_INFO"].must_equal "/foo"
+    env["path_info"].must_equal "/foo"
     env["CONTENT_TYPE"].must_equal "application/x-www-form-urlencoded"
     env["mock.postdata"].must_equal "foo[bar]=1"
   end
@@ -191,7 +191,7 @@ describe Rack::MockRequest do
     env = YAML.load(res.body)
     env["REQUEST_METHOD"].must_equal "POST"
     env["QUERY_STRING"].must_equal ""
-    env["PATH_INFO"].must_equal "/foo"
+    env["path_info"].must_equal "/foo"
     env["CONTENT_TYPE"].must_equal "multipart/form-data; boundary=AaB03x"
     # The gsub accounts for differences in YAMLs affect on the data.
     env["mock.postdata"].gsub("\r", "").length.must_equal 206

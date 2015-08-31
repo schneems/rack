@@ -45,8 +45,8 @@ describe Rack::Handler::FastCGI do
     response["SERVER_SOFTWARE"].must_match(/lighttpd/)
     response["HTTP_VERSION"].must_equal "HTTP/1.1"
     response["SERVER_PROTOCOL"].must_equal "HTTP/1.1"
-    response["SERVER_PORT"].must_equal @port.to_s
-    response["SERVER_NAME"].must_equal @host
+    response["server_port"].must_equal @port.to_s
+    response["server_name"].must_equal @host
   end
 
   it "have rack headers" do
@@ -60,17 +60,17 @@ describe Rack::Handler::FastCGI do
   it "have CGI headers on GET" do
     GET("/test.fcgi")
     response["REQUEST_METHOD"].must_equal "GET"
-    response["SCRIPT_NAME"].must_equal "/test.fcgi"
+    response["script_name"].must_equal "/test.fcgi"
     response["REQUEST_PATH"].must_equal "/"
-    response["PATH_INFO"].must_equal ""
+    response["path_info"].must_equal ""
     response["QUERY_STRING"].must_equal ""
     response["test.postdata"].must_equal ""
 
     GET("/test.fcgi/foo?quux=1")
     response["REQUEST_METHOD"].must_equal "GET"
-    response["SCRIPT_NAME"].must_equal "/test.fcgi"
+    response["script_name"].must_equal "/test.fcgi"
     response["REQUEST_PATH"].must_equal "/"
-    response["PATH_INFO"].must_equal "/foo"
+    response["path_info"].must_equal "/foo"
     response["QUERY_STRING"].must_equal "quux=1"
   end
 
@@ -78,7 +78,7 @@ describe Rack::Handler::FastCGI do
     POST("/test.fcgi", {"rack-form-data" => "23"}, {'X-test-header' => '42'})
     status.must_equal 200
     response["REQUEST_METHOD"].must_equal "POST"
-    response["SCRIPT_NAME"].must_equal "/test.fcgi"
+    response["script_name"].must_equal "/test.fcgi"
     response["REQUEST_PATH"].must_equal "/"
     response["QUERY_STRING"].must_equal ""
     response["HTTP_X_TEST_HEADER"].must_equal "42"

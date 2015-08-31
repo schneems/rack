@@ -33,7 +33,7 @@ describe Rack::Lint do
 
     lambda {
       e = env
-      e.delete("SERVER_NAME")
+      e.delete("server_name")
       Rack::Lint.new(nil).call(e)
     }.must_raise(Rack::Lint::LintError).
       message.must_match(/missing required key SERVER_NAME/)
@@ -97,12 +97,12 @@ describe Rack::Lint do
       message.must_match(/REQUEST_METHOD/)
 
     lambda {
-      Rack::Lint.new(nil).call(env("SCRIPT_NAME" => "howdy"))
+      Rack::Lint.new(nil).call(env("script_name" => "howdy"))
     }.must_raise(Rack::Lint::LintError).
       message.must_match(/must start with/)
 
     lambda {
-      Rack::Lint.new(nil).call(env("PATH_INFO" => "../foo"))
+      Rack::Lint.new(nil).call(env("path_info" => "../foo"))
     }.must_raise(Rack::Lint::LintError).
       message.must_match(/must start with/)
 
@@ -113,14 +113,14 @@ describe Rack::Lint do
 
     lambda {
       e = env
-      e.delete("PATH_INFO")
-      e.delete("SCRIPT_NAME")
+      e.delete("path_info")
+      e.delete("script_name")
       Rack::Lint.new(nil).call(e)
     }.must_raise(Rack::Lint::LintError).
       message.must_match(/One of .* must be set/)
 
     lambda {
-      Rack::Lint.new(nil).call(env("SCRIPT_NAME" => "/"))
+      Rack::Lint.new(nil).call(env("script_name" => "/"))
     }.must_raise(Rack::Lint::LintError).
       message.must_match(/cannot be .* make it ''/)
   end

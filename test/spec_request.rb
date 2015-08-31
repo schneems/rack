@@ -14,7 +14,7 @@ describe Rack::Request do
 
   it "can get a key from the env" do
     req = Rack::Request.new(Rack::MockRequest.env_for("http://example.com:8080/"))
-    assert_equal "example.com", req.get_header("SERVER_NAME")
+    assert_equal "example.com", req.get_header("server_name")
   end
 
   it 'yields to the block if no value has been set' do
@@ -85,97 +85,97 @@ describe Rack::Request do
 
   it "figure out the correct host" do
     req = Rack::Request.new \
-      Rack::MockRequest.env_for("/", "HTTP_HOST" => "www2.example.org")
+      Rack::MockRequest.env_for("/", "http_host" => "www2.example.org")
     req.host.must_equal "www2.example.org"
 
     req = Rack::Request.new \
-      Rack::MockRequest.env_for("/", "SERVER_NAME" => "example.org", "SERVER_PORT" => "9292")
+      Rack::MockRequest.env_for("/", "server_name" => "example.org", "server_port" => "9292")
     req.host.must_equal "example.org"
 
     req = Rack::Request.new \
-      Rack::MockRequest.env_for("/", "HTTP_HOST" => "localhost:81", "HTTP_X_FORWARDED_HOST" => "example.org:9292")
+      Rack::MockRequest.env_for("/", "http_host" => "localhost:81", "HTTP_X_FORWARDED_HOST" => "example.org:9292")
     req.host.must_equal "example.org"
 
-    env = Rack::MockRequest.env_for("/", "SERVER_ADDR" => "192.168.1.1", "SERVER_PORT" => "9292")
-    env.delete("SERVER_NAME")
+    env = Rack::MockRequest.env_for("/", "SERVER_ADDR" => "192.168.1.1", "server_port" => "9292")
+    env.delete("server_name")
     req = Rack::Request.new(env)
     req.host.must_equal "192.168.1.1"
 
     env = Rack::MockRequest.env_for("/")
-    env.delete("SERVER_NAME")
+    env.delete("server_name")
     req = Rack::Request.new(env)
     req.host.must_equal ""
   end
 
   it "figure out the correct port" do
     req = Rack::Request.new \
-      Rack::MockRequest.env_for("/", "HTTP_HOST" => "www2.example.org")
+      Rack::MockRequest.env_for("/", "http_host" => "www2.example.org")
     req.port.must_equal 80
 
     req = Rack::Request.new \
-      Rack::MockRequest.env_for("/", "HTTP_HOST" => "www2.example.org:81")
+      Rack::MockRequest.env_for("/", "http_host" => "www2.example.org:81")
     req.port.must_equal 81
 
     req = Rack::Request.new \
-      Rack::MockRequest.env_for("/", "SERVER_NAME" => "example.org", "SERVER_PORT" => "9292")
+      Rack::MockRequest.env_for("/", "server_name" => "example.org", "server_port" => "9292")
     req.port.must_equal 9292
 
     req = Rack::Request.new \
-      Rack::MockRequest.env_for("/", "HTTP_HOST" => "localhost:81", "HTTP_X_FORWARDED_HOST" => "example.org:9292")
+      Rack::MockRequest.env_for("/", "http_host" => "localhost:81", "HTTP_X_FORWARDED_HOST" => "example.org:9292")
     req.port.must_equal 9292
 
     req = Rack::Request.new \
-      Rack::MockRequest.env_for("/", "HTTP_HOST" => "localhost:81", "HTTP_X_FORWARDED_HOST" => "example.org")
+      Rack::MockRequest.env_for("/", "http_host" => "localhost:81", "HTTP_X_FORWARDED_HOST" => "example.org")
     req.port.must_equal 80
 
     req = Rack::Request.new \
-      Rack::MockRequest.env_for("/", "HTTP_HOST" => "localhost:81", "HTTP_X_FORWARDED_HOST" => "example.org", "HTTP_X_FORWARDED_SSL" => "on")
+      Rack::MockRequest.env_for("/", "http_host" => "localhost:81", "HTTP_X_FORWARDED_HOST" => "example.org", "HTTP_X_FORWARDED_SSL" => "on")
     req.port.must_equal 443
 
      req = Rack::Request.new \
-      Rack::MockRequest.env_for("/", "HTTP_HOST" => "localhost:81", "HTTP_X_FORWARDED_HOST" => "example.org", "HTTP_X_FORWARDED_PROTO" => "https")
+      Rack::MockRequest.env_for("/", "http_host" => "localhost:81", "HTTP_X_FORWARDED_HOST" => "example.org", "HTTP_X_FORWARDED_PROTO" => "https")
     req.port.must_equal 443
 
     req = Rack::Request.new \
-      Rack::MockRequest.env_for("/", "HTTP_HOST" => "localhost:81", "HTTP_X_FORWARDED_HOST" => "example.org", "HTTP_X_FORWARDED_PORT" => "9393")
+      Rack::MockRequest.env_for("/", "http_host" => "localhost:81", "HTTP_X_FORWARDED_HOST" => "example.org", "HTTP_X_FORWARDED_PORT" => "9393")
     req.port.must_equal 9393
 
     req = Rack::Request.new \
-      Rack::MockRequest.env_for("/", "HTTP_HOST" => "localhost:81", "HTTP_X_FORWARDED_HOST" => "example.org:9393", "SERVER_PORT" => "80")
+      Rack::MockRequest.env_for("/", "http_host" => "localhost:81", "HTTP_X_FORWARDED_HOST" => "example.org:9393", "server_port" => "80")
     req.port.must_equal 9393
 
     req = Rack::Request.new \
-      Rack::MockRequest.env_for("/", "HTTP_HOST" => "localhost:81", "HTTP_X_FORWARDED_HOST" => "example.org", "SERVER_PORT" => "9393")
+      Rack::MockRequest.env_for("/", "http_host" => "localhost:81", "HTTP_X_FORWARDED_HOST" => "example.org", "server_port" => "9393")
     req.port.must_equal 80
 
     req = Rack::Request.new \
-      Rack::MockRequest.env_for("/", "HTTP_HOST" => "localhost", "HTTP_X_FORWARDED_PROTO" => "https", "SERVER_PORT" => "80")
+      Rack::MockRequest.env_for("/", "http_host" => "localhost", "HTTP_X_FORWARDED_PROTO" => "https", "server_port" => "80")
     req.port.must_equal 443
 
     req = Rack::Request.new \
-      Rack::MockRequest.env_for("/", "HTTP_HOST" => "localhost", "HTTP_X_FORWARDED_PROTO" => "https,https", "SERVER_PORT" => "80")
+      Rack::MockRequest.env_for("/", "http_host" => "localhost", "HTTP_X_FORWARDED_PROTO" => "https,https", "server_port" => "80")
     req.port.must_equal 443
   end
 
   it "figure out the correct host with port" do
     req = Rack::Request.new \
-      Rack::MockRequest.env_for("/", "HTTP_HOST" => "www2.example.org")
+      Rack::MockRequest.env_for("/", "http_host" => "www2.example.org")
     req.host_with_port.must_equal "www2.example.org"
 
     req = Rack::Request.new \
-      Rack::MockRequest.env_for("/", "HTTP_HOST" => "localhost:81")
+      Rack::MockRequest.env_for("/", "http_host" => "localhost:81")
     req.host_with_port.must_equal "localhost:81"
 
     req = Rack::Request.new \
-      Rack::MockRequest.env_for("/", "SERVER_NAME" => "example.org", "SERVER_PORT" => "9292")
+      Rack::MockRequest.env_for("/", "server_name" => "example.org", "server_port" => "9292")
     req.host_with_port.must_equal "example.org:9292"
 
     req = Rack::Request.new \
-      Rack::MockRequest.env_for("/", "HTTP_HOST" => "localhost:81", "HTTP_X_FORWARDED_HOST" => "example.org:9292")
+      Rack::MockRequest.env_for("/", "http_host" => "localhost:81", "HTTP_X_FORWARDED_HOST" => "example.org:9292")
     req.host_with_port.must_equal "example.org:9292"
 
     req = Rack::Request.new \
-      Rack::MockRequest.env_for("/", "HTTP_HOST" => "localhost:81", "HTTP_X_FORWARDED_HOST" => "example.org", "SERVER_PORT" => "9393")
+      Rack::MockRequest.env_for("/", "http_host" => "localhost:81", "HTTP_X_FORWARDED_HOST" => "example.org", "server_port" => "9393")
     req.host_with_port.must_equal "example.org"
   end
 
@@ -515,15 +515,15 @@ describe Rack::Request do
     request.scheme.must_equal "https"
     request.must_be :ssl?
 
-    request = Rack::Request.new(Rack::MockRequest.env_for("/", 'HTTP_HOST' => 'www.example.org:8080'))
+    request = Rack::Request.new(Rack::MockRequest.env_for("/", 'http_host' => 'www.example.org:8080'))
     request.scheme.must_equal "http"
     request.wont_be :ssl?
 
-    request = Rack::Request.new(Rack::MockRequest.env_for("/", 'HTTP_HOST' => 'www.example.org:8443', 'HTTPS' => 'on'))
+    request = Rack::Request.new(Rack::MockRequest.env_for("/", 'http_host' => 'www.example.org:8443', 'HTTPS' => 'on'))
     request.scheme.must_equal "https"
     request.must_be :ssl?
 
-    request = Rack::Request.new(Rack::MockRequest.env_for("/", 'HTTP_HOST' => 'www.example.org:8443', 'HTTP_X_FORWARDED_SSL' => 'on'))
+    request = Rack::Request.new(Rack::MockRequest.env_for("/", 'http_host' => 'www.example.org:8443', 'HTTP_X_FORWARDED_SSL' => 'on'))
     request.scheme.must_equal "https"
     request.must_be :ssl?
 
@@ -691,12 +691,12 @@ describe Rack::Request do
     req.script_name.must_equal ""
     req.script_name = "/foo"
     req.script_name.must_equal "/foo"
-    e["SCRIPT_NAME"].must_equal "/foo"
+    e["script_name"].must_equal "/foo"
 
     req.path_info.must_equal "/"
     req.path_info = "/foo"
     req.path_info.must_equal "/foo"
-    e["PATH_INFO"].must_equal "/foo"
+    e["path_info"].must_equal "/foo"
   end
 
   it "provide the original env" do
@@ -707,14 +707,14 @@ describe Rack::Request do
   it "restore the base URL" do
     Rack::Request.new(Rack::MockRequest.env_for("")).base_url.
       must_equal "http://example.org"
-    Rack::Request.new(Rack::MockRequest.env_for("", "SCRIPT_NAME" => "/foo")).base_url.
+    Rack::Request.new(Rack::MockRequest.env_for("", "script_name" => "/foo")).base_url.
       must_equal "http://example.org"
   end
 
   it "restore the URL" do
     Rack::Request.new(Rack::MockRequest.env_for("")).url.
       must_equal "http://example.org/"
-    Rack::Request.new(Rack::MockRequest.env_for("", "SCRIPT_NAME" => "/foo")).url.
+    Rack::Request.new(Rack::MockRequest.env_for("", "script_name" => "/foo")).url.
       must_equal "http://example.org/foo/"
     Rack::Request.new(Rack::MockRequest.env_for("/foo")).url.
       must_equal "http://example.org/foo"
@@ -735,7 +735,7 @@ describe Rack::Request do
   it "restore the full path" do
     Rack::Request.new(Rack::MockRequest.env_for("")).fullpath.
       must_equal "/"
-    Rack::Request.new(Rack::MockRequest.env_for("", "SCRIPT_NAME" => "/foo")).fullpath.
+    Rack::Request.new(Rack::MockRequest.env_for("", "script_name" => "/foo")).fullpath.
       must_equal "/foo/"
     Rack::Request.new(Rack::MockRequest.env_for("/foo")).fullpath.
       must_equal "/foo"

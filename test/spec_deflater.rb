@@ -181,14 +181,14 @@ describe Rack::Deflater do
       'app_status' => 200,
       'app_body' => app_body,
       'request_headers' => {
-        'PATH_INFO' => '/'
+        'path_info' => '/'
       }
     }
     options2 = {
       'app_status' => 200,
       'app_body' => app_body,
       'request_headers' => {
-        'PATH_INFO' => '/foo/bar'
+        'path_info' => '/foo/bar'
       }
     }
 

@@ -9,10 +9,10 @@ class EnvMiddleware
 
   def call(env)
     # provides a way to test that lint is present
-    if env["PATH_INFO"] == "/broken_lint"
+    if env["path_info"] == "/broken_lint"
       return [200, {}, ["Broken Lint"]]
     # provides a way to kill the process without knowing the pid
-    elsif env["PATH_INFO"] == "/die"
+    elsif env["path_info"] == "/die"
       exit!
     end
 
