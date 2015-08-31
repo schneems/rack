@@ -4,6 +4,7 @@ require 'rack/server'
 require 'tempfile'
 require 'socket'
 require 'open-uri'
+require 'webrick'
 
 module Minitest::Spec::DSL
   alias :should :it
